@@ -1,23 +1,21 @@
 <?php
-require_once __DIR__ . '/../models/Provider.php';
+require_once __DIR__ . '/../models/Category.php';
 
-class ProviderController {
+class CategoryController {
     private $model;
 
     public function __construct($db) {
-        $this->model = new Provider($db);
+        $this->model = new Category($db);
     }
 
-    
-    public function getAllProviders() {
+    public function getAllCategories() {
         return [
             "status" => 200,
             "data" => $this->model->getAll()
         ];
     }
 
-    
-    public function getProviderById($id) {
+    public function getCategoryById($id) {
         if (!is_numeric($id)) {
             return [
                 "status" => 400,
@@ -26,46 +24,30 @@ class ProviderController {
             ];
         }
 
-        $provider = $this->model->findById($id);
+        $cat = $this->model->findById($id);
 
-        if (!$provider) {
+        if (!$cat) {
             return [
                 "status" => 404,
-                "error_code" => "PROVIDER_NOT_FOUND",
-                "message" => "Provider not found"
+                "error_code" => "CATEGORY_NOT_FOUND",
+                "message" => "Category not found"
             ];
         }
 
         return [
             "status" => 200,
-            "data" => $provider
+            "data" => $cat
         ];
     }
 
-    
     public function create($data) {
-        if (
-            empty($data['name']) ||
-            empty($data['email']) ||
-            empty($data['password'])
-        ) {
+        if (empty($data['name'])) {
             return [
                 "status" => 400,
-                "error_code" => "MISSING_FIELDS",
-                "message" => "Name, email and password are required"
+                "error_code" => "MISSING_NAME",
+                "message" => "Name is required"
             ];
         }
-
-        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            return [
-                "status" => 400,
-                "error_code" => "INVALID_EMAIL",
-                "message" => "Invalid email format"
-            ];
-        }
-
-        
-        $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
 
         $result = $this->model->create($data);
 
@@ -73,17 +55,16 @@ class ProviderController {
             return [
                 "status" => 500,
                 "error_code" => "CREATE_FAILED",
-                "message" => "Failed to create provider"
+                "message" => "Failed to create category"
             ];
         }
 
         return [
             "status" => 201,
-            "message" => "Provider created successfully"
+            "message" => "Category created successfully"
         ];
     }
 
-   
     public function update($id, $data) {
         if (!is_numeric($id)) {
             return [
@@ -98,21 +79,9 @@ class ProviderController {
         if (!$exists) {
             return [
                 "status" => 404,
-                "error_code" => "PROVIDER_NOT_FOUND",
-                "message" => "Provider not found"
+                "error_code" => "CATEGORY_NOT_FOUND",
+                "message" => "Category not found"
             ];
-        }
-
-        if (!empty($data['email']) && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            return [
-                "status" => 400,
-                "error_code" => "INVALID_EMAIL",
-                "message" => "Invalid email format"
-            ];
-        }
-
-        if (!empty($data['password'])) {
-            $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
         }
 
         $result = $this->model->update($id, $data);
@@ -121,17 +90,16 @@ class ProviderController {
             return [
                 "status" => 500,
                 "error_code" => "UPDATE_FAILED",
-                "message" => "Failed to update provider"
+                "message" => "Failed to update category"
             ];
         }
 
         return [
             "status" => 200,
-            "message" => "Provider updated successfully"
+            "message" => "Category updated successfully"
         ];
     }
 
-    
     public function delete($id) {
         if (!is_numeric($id)) {
             return [
@@ -146,8 +114,8 @@ class ProviderController {
         if (!$exists) {
             return [
                 "status" => 404,
-                "error_code" => "PROVIDER_NOT_FOUND",
-                "message" => "Provider not found"
+                "error_code" => "CATEGORY_NOT_FOUND",
+                "message" => "Category not found"
             ];
         }
 
@@ -157,13 +125,13 @@ class ProviderController {
             return [
                 "status" => 500,
                 "error_code" => "DELETE_FAILED",
-                "message" => "Failed to delete provider"
+                "message" => "Failed to delete category"
             ];
         }
 
         return [
             "status" => 200,
-            "message" => "Provider deleted successfully"
+            "message" => "Category deleted successfully"
         ];
     }
 }

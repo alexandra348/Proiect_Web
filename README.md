@@ -29,6 +29,7 @@ soft-drink-organizer/
 │   │
 │   ├── models/
 │   │   ├── User.php
+│   │   ├── Provider.php
 │   │   ├── Drink.php
 │   │   ├── Category.php
 │   │   ├── Ingredient.php
@@ -104,7 +105,7 @@ soft-drink-organizer/
 
   * nginx (server web)
   * php (backend API)
-  * postgres (baza de date)
+  * postgres (baza de date) (psql -U postgres -d softdrinks)
 * Configurează rețeaua dintre servicii
 
 ## `docker/nginx/default.conf`

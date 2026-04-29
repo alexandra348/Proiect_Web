@@ -1,15 +1,15 @@
 <?php
-require_once __DIR__ . '/../models/Provider.php';
+require_once __DIR__ . '/../models/Restriction.php';
 
-class ProviderController {
+class RestrictionController {
     private $model;
 
     public function __construct($db) {
-        $this->model = new Provider($db);
+        $this->model = new Restriction($db);
     }
 
     
-    public function getAllProviders() {
+    public function getAllRestrictions() {
         return [
             "status" => 200,
             "data" => $this->model->getAll()
@@ -17,7 +17,7 @@ class ProviderController {
     }
 
     
-    public function getProviderById($id) {
+    public function getRestrictionById($id) {
         if (!is_numeric($id)) {
             return [
                 "status" => 400,
@@ -26,46 +26,31 @@ class ProviderController {
             ];
         }
 
-        $provider = $this->model->findById($id);
+        $restriction = $this->model->findById($id);
 
-        if (!$provider) {
+        if (!$restriction) {
             return [
                 "status" => 404,
-                "error_code" => "PROVIDER_NOT_FOUND",
-                "message" => "Provider not found"
+                "error_code" => "RESTRICTION_NOT_FOUND",
+                "message" => "Restriction not found"
             ];
         }
 
         return [
             "status" => 200,
-            "data" => $provider
+            "data" => $restriction
         ];
     }
 
     
     public function create($data) {
-        if (
-            empty($data['name']) ||
-            empty($data['email']) ||
-            empty($data['password'])
-        ) {
+        if (empty($data['name'])) {
             return [
                 "status" => 400,
-                "error_code" => "MISSING_FIELDS",
-                "message" => "Name, email and password are required"
+                "error_code" => "MISSING_NAME",
+                "message" => "Name is required"
             ];
         }
-
-        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            return [
-                "status" => 400,
-                "error_code" => "INVALID_EMAIL",
-                "message" => "Invalid email format"
-            ];
-        }
-
-        
-        $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
 
         $result = $this->model->create($data);
 
@@ -73,13 +58,13 @@ class ProviderController {
             return [
                 "status" => 500,
                 "error_code" => "CREATE_FAILED",
-                "message" => "Failed to create provider"
+                "message" => "Failed to create restriction"
             ];
         }
 
         return [
             "status" => 201,
-            "message" => "Provider created successfully"
+            "message" => "Restriction created successfully"
         ];
     }
 
@@ -98,21 +83,9 @@ class ProviderController {
         if (!$exists) {
             return [
                 "status" => 404,
-                "error_code" => "PROVIDER_NOT_FOUND",
-                "message" => "Provider not found"
+                "error_code" => "RESTRICTION_NOT_FOUND",
+                "message" => "Restriction not found"
             ];
-        }
-
-        if (!empty($data['email']) && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            return [
-                "status" => 400,
-                "error_code" => "INVALID_EMAIL",
-                "message" => "Invalid email format"
-            ];
-        }
-
-        if (!empty($data['password'])) {
-            $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
         }
 
         $result = $this->model->update($id, $data);
@@ -121,13 +94,13 @@ class ProviderController {
             return [
                 "status" => 500,
                 "error_code" => "UPDATE_FAILED",
-                "message" => "Failed to update provider"
+                "message" => "Failed to update restriction"
             ];
         }
 
         return [
             "status" => 200,
-            "message" => "Provider updated successfully"
+            "message" => "Restriction updated successfully"
         ];
     }
 
@@ -146,8 +119,8 @@ class ProviderController {
         if (!$exists) {
             return [
                 "status" => 404,
-                "error_code" => "PROVIDER_NOT_FOUND",
-                "message" => "Provider not found"
+                "error_code" => "RESTRICTION_NOT_FOUND",
+                "message" => "Restriction not found"
             ];
         }
 
@@ -157,13 +130,13 @@ class ProviderController {
             return [
                 "status" => 500,
                 "error_code" => "DELETE_FAILED",
-                "message" => "Failed to delete provider"
+                "message" => "Failed to delete restriction"
             ];
         }
 
         return [
             "status" => 200,
-            "message" => "Provider deleted successfully"
+            "message" => "Restriction deleted successfully"
         ];
     }
 }
