@@ -49,6 +49,13 @@ class UserController {
         ];
     }
 
+    public function getAllUsers() {
+        return [
+            "status" => 200,
+            "data" => $this->model->getAll()
+        ];
+    }
+
     
     public function getUserById($id) {
         if (!is_numeric($id)) {

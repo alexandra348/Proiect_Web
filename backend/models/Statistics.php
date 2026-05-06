@@ -49,7 +49,7 @@ class Statistics {
     
     public function topRated() {
         $stmt = $this->conn->query("
-            SELECT d.id, d.name, AVG(td.rating) as avg_rating
+            SELECT d.id, d.name, ROUND(AVG(td.rating),2) as avg_rating
             FROM drinks d
             JOIN tried_drinks td ON d.id = td.drink_id
             GROUP BY d.id, d.name

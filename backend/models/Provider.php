@@ -7,8 +7,8 @@ class Provider {
     }
 
     public function create($data) {
-        $query = "INSERT INTO providers (name, email, password, type, location)
-                  VALUES (:name, :email, :password, :type, :location)";
+        $query = "INSERT INTO providers (name, email, password, type,address, city)
+                  VALUES (:name, :email, :password, :type, :address, :city)";
 
         $stmt = $this->conn->prepare($query);
 
@@ -17,7 +17,8 @@ class Provider {
             ":email" => $data['email'],
             ":password" => password_hash($data['password'], PASSWORD_DEFAULT),
             ":type" => $data['type'],
-            ":location" => $data['location']
+            ":address" => $data['address'],
+            ":city" => $data['city']
         ]);
     }
 

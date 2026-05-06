@@ -28,7 +28,6 @@ $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $method = $_SERVER['REQUEST_METHOD'];
 
 
-
 if ($uri === "/api/drinks" && $method === "GET") {
     $controller = new DrinkController($db);
     
@@ -72,6 +71,14 @@ if ($uri === "/api/categories" && $method === "POST") {
     exit;
 }
 
+if ($uri === "/api/categories" && $method === "DELETE") {
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    $controller = new CategoryController($db);
+    sendResponse($controller->delete($data['id']));
+    exit;
+}
+
 
 
 if ($uri === "/api/ingredients" && $method === "GET") {
@@ -111,7 +118,10 @@ if ($uri === "/api/providers" && $method === "POST") {
 
 if ($uri === "/api/users" && $method === "GET") {
     $controller = new UserController($db);
-    sendResponse($controller->getAllUsers());
+    if (isset($_GET['id']))
+        sendResponse($controller->getUserById($_GET['id']));
+    else
+        sendResponse($controller->getAllUsers());
     exit;
 }
 
@@ -119,15 +129,11 @@ if ($uri === "/api/users" && $method === "POST") {
     $data = json_decode(file_get_contents("php://input"), true);
 
     $controller = new UserController($db);
-    sendResponse($controller->create($data));
+    sendResponse($controller->register($data));
     exit;
 }
 
-if ($uri === "/api/users" && isset($_GET['id'])) {
-    $controller = new UserController($db);
-    sendResponse($controller->getUserById($_GET['id']));
-    exit;
-}
+
 
 if ($uri === "/api/users" && $method === "PUT") {
     $data = json_decode(file_get_contents("php://input"), true);
