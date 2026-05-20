@@ -34,26 +34,34 @@ class Provider {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+   public function getAll() {
+    $stmt = $this->conn->query("
+        SELECT id, name, email, type, address, city
+        FROM providers
+        ORDER BY id
+    ");
 
-    public function getAll() {
-        $stmt = $this->conn->query("SELECT id, name, type, location FROM providers");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
+  
     public function update($id, $data) {
-        $stmt = $this->conn->prepare("
-            UPDATE providers 
-            SET name=:name, type=:type, location=:location 
-            WHERE id=:id
-        ");
+    $stmt = $this->conn->prepare("
+        UPDATE providers 
+        SET name = :name,
+            type = :type,
+            address = :address,
+            city = :city
+        WHERE id = :id
+    ");
 
-        return $stmt->execute([
-            ":name" => $data['name'],
-            ":type" => $data['type'],
-            ":location" => $data['location'],
-            ":id" => $id
-        ]);
-    }
+    return $stmt->execute([
+        ":name" => $data['name'],
+        ":type" => $data['type'],
+        ":address" => $data['address'],
+        ":city" => $data['city'],
+        ":id" => $id
+    ]);
+   }
 
     public function delete($id) {
         $stmt = $this->conn->prepare("DELETE FROM providers WHERE id=:id");
