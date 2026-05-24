@@ -1,5 +1,5 @@
 <?php
-class Drink {
+class DrinkRepository {
     private $conn;
 
     public function __construct($db) {

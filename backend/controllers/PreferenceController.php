@@ -1,260 +1,316 @@
 <?php
-require_once __DIR__ . '/../models/Preference.php';
+
+require_once __DIR__ . '/../services/PreferenceService.php';
+require_once __DIR__ . '/../exceptions/PreferenceException.php';
 
 class PreferenceController {
-    private $model;
 
-    public function __construct($db) {
-        $this->model = new Preference($db);
+    private PreferenceService $service;
+
+    public function __construct(PreferenceService $service)
+    {
+        $this->service = $service;
     }
 
-    
+    // --------------------
+    // WISHLIST
+    // --------------------
 
-    public function addWishlist($data) {
-        if (empty($data['user_id']) || empty($data['drink_id'])) {
+    public function addWishlist($data)
+    {
+        try {
+            $this->service->addToWishlist($data['user_id'], $data['drink_id']);
+
+            return [
+                "status" => 201,
+                "message" => "Added to wishlist"
+            ];
+
+        } catch (PreferenceException $e) {
             return [
                 "status" => 400,
-                "error_code" => "MISSING_FIELDS",
-                "message" => "user_id and drink_id are required"
-            ];
-        }
-
-        $result = $this->model->addToWishlist($data['user_id'], $data['drink_id']);
-
-        if (!$result) {
-            return [
-                "status" => 500,
                 "error_code" => "ADD_WISHLIST_FAILED",
-                "message" => "Failed to add to wishlist"
+                "message" => $e->getMessage()
             ];
         }
-
-        return [
-            "status" => 201,
-            "message" => "Added to wishlist"
-        ];
     }
 
-    public function getWishlist($user_id) {
-        if (!is_numeric($user_id)) {
+    public function getWishlist($user_id)
+    {
+        try {
+            return [
+                "status" => 200,
+                "data" => $this->service->getWishlist($user_id)
+            ];
+
+        } catch (PreferenceException $e) {
             return [
                 "status" => 400,
-                "error_code" => "INVALID_USER_ID"
+                "error_code" => "WISHLIST_ERROR",
+                "message" => $e->getMessage()
             ];
         }
-
-        return [
-            "status" => 200,
-            "data" => $this->model->getWishlist($user_id)
-        ];
     }
 
-    
+    // --------------------
+    // TRIED DRINKS
+    // --------------------
 
-    public function getTriedList($user_id) {
-        if (!is_numeric($user_id)) {
+    public function addTried($data)
+    {
+        try {
+            $this->service->addTried(
+                $data['user_id'],
+                $data['drink_id'],
+                $data['rating'],
+                $data['notes'] ?? null
+            );
+
+            return [
+                "status" => 201,
+                "message" => "Added to tried list"
+            ];
+
+        } catch (PreferenceException $e) {
             return [
                 "status" => 400,
-                "error_code" => "INVALID_USER_ID"
+                "error_code" => "ADD_TRIED_FAILED",
+                "message" => $e->getMessage()
             ];
         }
-
-        return [
-            "status" => 200,
-            "data" => $this->model->getTriedList($user_id)
-        ];
     }
 
-    public function addTried($data) {
-        if (
-            empty($data['user_id']) ||
-            empty($data['drink_id']) ||
-            !isset($data['rating'])
-        ) {
+    public function getTriedList($user_id)
+    {
+        try {
+            return [
+                "status" => 200,
+                "data" => $this->service->getTriedList($user_id)
+            ];
+
+        } catch (PreferenceException $e) {
             return [
                 "status" => 400,
-                "error_code" => "MISSING_FIELDS",
-                "message" => "user_id, drink_id and rating are required"
+                "error_code" => "TRIED_ERROR",
+                "message" => $e->getMessage()
             ];
         }
+    }
 
-        $result = $this->model->addTried(
-            $data['user_id'],
-            $data['drink_id'],
-            $data['rating'],
-            $data['notes'] ?? null
-        );
+    // --------------------
+    // FAVORITE CATEGORIES
+    // --------------------
 
-        if (!$result) {
+    public function addFavoriteCategory($data)
+    {
+        try {
+            $this->service->addFavoriteCategory($data['user_id'], $data['category_id']);
+
+            return [
+                "status" => 201,
+                "message" => "Favorite category added"
+            ];
+
+        } catch (PreferenceException $e) {
+            return [
+                "status" => 400,
+                "error_code" => "CATEGORY_ERROR",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
+    public function getFavoriteCategories($user_id)
+    {
+        try {
+            return [
+                "status" => 200,
+                "data" => $this->service->getFavoriteCategories($user_id)
+            ];
+
+        } catch (PreferenceException $e) {
+            return [
+                "status" => 400,
+                "error_code" => "CATEGORY_ERROR",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
+    // --------------------
+    // FAVORITE INGREDIENTS
+    // --------------------
+
+    public function addFavoriteIngredient($data)
+    {
+        try {
+            $this->service->addFavoriteIngredient($data['user_id'], $data['ingredient_id']);
+
+            return [
+                "status" => 201,
+                "message" => "Favorite ingredient added"
+            ];
+
+        } catch (PreferenceException $e) {
+            return [
+                "status" => 400,
+                "error_code" => "INGREDIENT_ERROR",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
+    public function getFavoriteIngredients($user_id)
+    {
+        try {
+            return [
+                "status" => 200,
+                "data" => $this->service->getFavoriteIngredients($user_id)
+            ];
+
+        } catch (PreferenceException $e) {
+            return [
+                "status" => 400,
+                "error_code" => "INGREDIENT_ERROR",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
+    // --------------------
+    // AVOIDED INGREDIENTS
+    // --------------------
+
+    public function addAvoidedIngredient($data)
+    {
+        try {
+            $this->service->addAvoidedIngredient($data['user_id'], $data['ingredient_id']);
+
+            return [
+                "status" => 201,
+                "message" => "Avoided ingredient added"
+            ];
+
+        } catch (PreferenceException $e) {
+            return [
+                "status" => 400,
+                "error_code" => "AVOIDED_ERROR",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
+    public function getAvoidedIngredients($user_id)
+    {
+        try {
+            return [
+                "status" => 200,
+                "data" => $this->service->getAvoidedIngredients($user_id)
+            ];
+
+        } catch (PreferenceException $e) {
+            return [
+                "status" => 400,
+                "error_code" => "AVOIDED_ERROR",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
+    // --------------------
+    // RESTRICTIONS
+    // --------------------
+
+    public function getRestrictions()
+    {
+        try {
+            return [
+                "status" => 200,
+                "data" => $this->service->getUserRestrictions(0) // dacă vrei global, ajustăm service
+            ];
+
+        } catch (PreferenceException $e) {
             return [
                 "status" => 500,
-                "error_code" => "ADD_TRIED_FAILED",
-                "message" => "Failed to add tried drink"
+                "error_code" => "RESTRICTION_ERROR",
+                "message" => $e->getMessage()
             ];
         }
-
-        return [
-            "status" => 201,
-            "message" => "Added to tried list"
-        ];
     }
 
-    
+    public function addRestriction($data)
+    {
+        try {
+            $this->service->addUserRestriction($data['user_id'], $data['restriction_id']);
 
-    public function addFavoriteCategory($data) {
-        if (empty($data['user_id']) || empty($data['category_id'])) {
+            return [
+                "status" => 201,
+                "message" => "Restriction added"
+            ];
+
+        } catch (PreferenceException $e) {
             return [
                 "status" => 400,
-                "error_code" => "MISSING_FIELDS"
+                "error_code" => "RESTRICTION_ERROR",
+                "message" => $e->getMessage()
             ];
         }
-
-        return [
-            "status" => 201,
-            "message" => "Favorite category added",
-            "data" => $this->model->addFavoriteCategory($data['user_id'], $data['category_id'])
-        ];
     }
 
-    public function getFavoriteCategories($user_id) {
-        if (!is_numeric($user_id)) {
+    public function getUserRestrictions($user_id)
+    {
+        try {
+            return [
+                "status" => 200,
+                "data" => $this->service->getUserRestrictions($user_id)
+            ];
+
+        } catch (PreferenceException $e) {
             return [
                 "status" => 400,
-                "error_code" => "INVALID_USER_ID"
+                "error_code" => "RESTRICTION_ERROR",
+                "message" => $e->getMessage()
             ];
         }
-
-        return [
-            "status" => 200,
-            "data" => $this->model->getFavoriteCategories($user_id)
-        ];
     }
 
-    
+    // --------------------
+    // PROVIDERS
+    // --------------------
 
-    public function addFavoriteIngredient($data) {
-        if (empty($data['user_id']) || empty($data['ingredient_id'])) {
+    public function addFavoriteProvider($data)
+    {
+        try {
+            $this->service->addFavoriteProvider($data['user_id'], $data['provider_id']);
+
+            return [
+                "status" => 201,
+                "message" => "Favorite provider added"
+            ];
+
+        } catch (PreferenceException $e) {
             return [
                 "status" => 400,
-                "error_code" => "MISSING_FIELDS"
+                "error_code" => "PROVIDER_ERROR",
+                "message" => $e->getMessage()
             ];
         }
-
-        return [
-            "status" => 201,
-            "message" => "Favorite ingredient added",
-            "data" => $this->model->addFavoriteIngredient($data['user_id'], $data['ingredient_id'])
-        ];
     }
 
-    public function getFavoriteIngredients($user_id) {
-        if (!is_numeric($user_id)) {
+    public function getFavoriteProviders($user_id)
+    {
+        try {
+            return [
+                "status" => 200,
+                "data" => $this->service->getFavoriteProviders($user_id)
+            ];
+
+        } catch (PreferenceException $e) {
             return [
                 "status" => 400,
-                "error_code" => "INVALID_USER_ID"
+                "error_code" => "PROVIDER_ERROR",
+                "message" => $e->getMessage()
             ];
         }
-
-        return [
-            "status" => 200,
-            "data" => $this->model->getFavoriteIngredients($user_id)
-        ];
-    }
-
-    public function addAvoidedIngredient($data) {
-        if (empty($data['user_id']) || empty($data['ingredient_id'])) {
-            return [
-                "status" => 400,
-                "error_code" => "MISSING_FIELDS"
-            ];
-        }
-
-        return [
-            "status" => 201,
-            "message" => "Avoided ingredient added",
-            "data" => $this->model->addAvoidedIngredient($data['user_id'], $data['ingredient_id'])
-        ];
-    }
-
-    public function getAvoidedIngredients($user_id) {
-        if (!is_numeric($user_id)) {
-            return [
-                "status" => 400,
-                "error_code" => "INVALID_USER_ID"
-            ];
-        }
-
-        return [
-            "status" => 200,
-            "data" => $this->model->getAvoidedIngredients($user_id)
-        ];
-    }
-
-
-
-    public function getRestrictions() {
-        return [
-            "status" => 200,
-            "data" => $this->model->getAllRestrictions()
-        ];
-    }
-
-    public function addRestriction($data) {
-        if (empty($data['user_id']) || empty($data['restriction_id'])) {
-            return [
-                "status" => 400,
-                "error_code" => "MISSING_FIELDS"
-            ];
-        }
-
-        return [
-            "status" => 201,
-            "message" => "Restriction added",
-            "data" => $this->model->addUserRestriction($data['user_id'], $data['restriction_id'])
-        ];
-    }
-
-    public function getUserRestrictions($user_id) {
-        if (!is_numeric($user_id)) {
-            return [
-                "status" => 400,
-                "error_code" => "INVALID_USER_ID"
-            ];
-        }
-
-        return [
-            "status" => 200,
-            "data" => $this->model->getUserRestrictions($user_id)
-        ];
-    }
-
-
-    public function addFavoriteProvider($data) {
-        if (empty($data['user_id']) || empty($data['provider_id'])) {
-            return [
-                "status" => 400,
-                "error_code" => "MISSING_FIELDS"
-            ];
-        }
-
-        return [
-            "status" => 201,
-            "message" => "Favorite provider added",
-            "data" => $this->model->addFavoriteProvider($data['user_id'], $data['provider_id'])
-        ];
-    }
-
-    public function getFavoriteProviders($user_id) {
-        if (!is_numeric($user_id)) {
-            return [
-                "status" => 400,
-                "error_code" => "INVALID_USER_ID"
-            ];
-        }
-
-        return [
-            "status" => 200,
-            "data" => $this->model->getFavoriteProviders($user_id)
-        ];
     }
 }

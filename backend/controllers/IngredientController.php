@@ -1,137 +1,121 @@
 <?php
-require_once __DIR__ . '/../models/Ingredient.php';
+
+require_once __DIR__ . '/../services/IngredientService.php';
+require_once __DIR__ . '/../exceptions/IngredientException.php';
 
 class IngredientController {
-    private $model;
 
-    public function __construct($db) {
-        $this->model = new Ingredient($db);
+    private IngredientService $service;
+
+    public function __construct(IngredientService $service)
+    {
+        $this->service = $service;
     }
 
-    public function getAllIngredients() {
-        return [
-            "status" => 200,
-            "data" => $this->model->getAll()
-        ];
-    }
-
-    public function getIngredientById($id) {
-        if (!is_numeric($id)) {
+    public function getAllIngredients()
+    {
+        try {
             return [
-                "status" => 400,
-                "error_code" => "INVALID_ID",
-                "message" => "ID must be numeric"
+                "status" => 200,
+                "data" => $this->service->getAll()
             ];
-        }
-
-        $ingredient = $this->model->findById($id);
-
-        if (!$ingredient) {
-            return [
-                "status" => 404,
-                "error_code" => "INGREDIENT_NOT_FOUND",
-                "message" => "Ingredient not found"
-            ];
-        }
-
-        return [
-            "status" => 200,
-            "data" => $ingredient
-        ];
-    }
-
-    public function create($data) {
-        if (empty($data['name'])) {
-            return [
-                "status" => 400,
-                "error_code" => "MISSING_NAME",
-                "message" => "Name is required"
-            ];
-        }
-
-        $result = $this->model->create($data);
-
-        if (!$result) {
+        } catch (IngredientException $e) {
             return [
                 "status" => 500,
+                "error_code" => "FETCH_FAILED",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
+    public function getIngredientById($id)
+    {
+        try {
+            $ingredient = $this->service->findById($id);
+
+            return [
+                "status" => 200,
+                "data" => $ingredient
+            ];
+
+        } catch (IngredientException $e) {
+
+            $message = $e->getMessage();
+
+            $status = ($message === "Ingredient not found") ? 404 : 400;
+
+            return [
+                "status" => $status,
+                "error_code" => "INGREDIENT_ERROR",
+                "message" => $message
+            ];
+        }
+    }
+
+    public function create($data)
+    {
+        try {
+            $this->service->create($data);
+
+            return [
+                "status" => 201,
+                "message" => "Ingredient created successfully"
+            ];
+
+        } catch (IngredientException $e) {
+            return [
+                "status" => 400,
                 "error_code" => "CREATE_FAILED",
-                "message" => "Failed to create ingredient"
+                "message" => $e->getMessage()
             ];
         }
-
-        return [
-            "status" => 201,
-            "message" => "Ingredient created successfully"
-        ];
     }
 
-    public function update($id, $data) {
-        if (!is_numeric($id)) {
+    public function update($id, $data)
+    {
+        try {
+            $this->service->update($id, $data);
+
             return [
-                "status" => 400,
-                "error_code" => "INVALID_ID",
-                "message" => "ID must be numeric"
+                "status" => 200,
+                "message" => "Ingredient updated successfully"
             ];
-        }
 
-        $exists = $this->model->findById($id);
+        } catch (IngredientException $e) {
 
-        if (!$exists) {
+            $message = $e->getMessage();
+
+            $status = ($message === "Ingredient not found") ? 404 : 400;
+
             return [
-                "status" => 404,
-                "error_code" => "INGREDIENT_NOT_FOUND",
-                "message" => "Ingredient not found"
-            ];
-        }
-
-        $result = $this->model->update($id, $data);
-
-        if (!$result) {
-            return [
-                "status" => 500,
+                "status" => $status,
                 "error_code" => "UPDATE_FAILED",
-                "message" => "Failed to update ingredient"
+                "message" => $message
             ];
         }
-
-        return [
-            "status" => 200,
-            "message" => "Ingredient updated successfully"
-        ];
     }
 
-    public function delete($id) {
-        if (!is_numeric($id)) {
+    public function delete($id)
+    {
+        try {
+            $this->service->delete($id);
+
             return [
-                "status" => 400,
-                "error_code" => "INVALID_ID",
-                "message" => "ID must be numeric"
+                "status" => 200,
+                "message" => "Ingredient deleted successfully"
             ];
-        }
 
-        $exists = $this->model->findById($id);
+        } catch (IngredientException $e) {
 
-        if (!$exists) {
+            $message = $e->getMessage();
+
+            $status = ($message === "Ingredient not found") ? 404 : 400;
+
             return [
-                "status" => 404,
-                "error_code" => "INGREDIENT_NOT_FOUND",
-                "message" => "Ingredient not found"
-            ];
-        }
-
-        $result = $this->model->delete($id);
-
-        if (!$result) {
-            return [
-                "status" => 500,
+                "status" => $status,
                 "error_code" => "DELETE_FAILED",
-                "message" => "Failed to delete ingredient"
+                "message" => $message
             ];
         }
-
-        return [
-            "status" => 200,
-            "message" => "Ingredient deleted successfully"
-        ];
     }
 }

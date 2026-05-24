@@ -1,0 +1,27 @@
+.topbar-left,
+.topbar-right{
+display:flex;
+align-items:center;
+gap:16px;
+}
+
+.user-profile{
+display:flex;
+align-items:center;
+gap:8px;
+cursor:pointer;
+}
+
+.user-profile img{
+width:40px;
+height:40px;
+border-radius:50%;
+object-fit:cover;
+}
+
+.icon-btn{
+background:white;
+border:none;
+font-size:18px;
+cursor:pointer;
+}

@@ -1,5 +1,5 @@
 <?php
-class Provider {
+class ProviderRepository {
     private $conn;
 
     public function __construct($db) {

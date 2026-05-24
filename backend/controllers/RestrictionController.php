@@ -1,142 +1,127 @@
 <?php
-require_once __DIR__ . '/../models/Restriction.php';
+
+require_once __DIR__ . '/../services/RestrictionService.php';
+require_once __DIR__ . '/../exceptions/RestrictionException.php';
 
 class RestrictionController {
-    private $model;
 
-    public function __construct($db) {
-        $this->model = new Restriction($db);
+    private RestrictionService $service;
+
+    public function __construct(RestrictionService $service)
+    {
+        $this->service = $service;
     }
 
-    
-    public function getAllRestrictions() {
-        return [
-            "status" => 200,
-            "data" => $this->model->getAll()
-        ];
-    }
-
-    
-    public function getRestrictionById($id) {
-        if (!is_numeric($id)) {
+    public function getAllRestrictions()
+    {
+        try {
             return [
-                "status" => 400,
-                "error_code" => "INVALID_ID",
-                "message" => "ID must be numeric"
+                "status" => 200,
+                "data" => $this->service->getAll()
             ];
-        }
-
-        $restriction = $this->model->findById($id);
-
-        if (!$restriction) {
-            return [
-                "status" => 404,
-                "error_code" => "RESTRICTION_NOT_FOUND",
-                "message" => "Restriction not found"
-            ];
-        }
-
-        return [
-            "status" => 200,
-            "data" => $restriction
-        ];
-    }
-
-    
-    public function create($data) {
-        if (empty($data['name'])) {
-            return [
-                "status" => 400,
-                "error_code" => "MISSING_NAME",
-                "message" => "Name is required"
-            ];
-        }
-
-        $result = $this->model->create($data);
-
-        if (!$result) {
+        } catch (RestrictionException $e) {
             return [
                 "status" => 500,
+                "error_code" => "FETCH_FAILED",
+                "message" => $e->getMessage()
+            ];
+        } catch (Exception $e) {
+            return [
+                "status" => 500,
+                "error_code" => "SERVER_ERROR",
+                "message" => "Unexpected server error"
+            ];
+        }
+    }
+
+    public function getRestrictionById($id)
+    {
+        try {
+            $restriction = $this->service->findById($id);
+
+            return [
+                "status" => 200,
+                "data" => $restriction
+            ];
+
+        } catch (RestrictionException $e) {
+
+            $message = $e->getMessage();
+
+            $status = ($message === "Restriction not found") ? 404 : 400;
+
+            return [
+                "status" => $status,
+                "error_code" => "RESTRICTION_ERROR",
+                "message" => $message
+            ];
+        }
+    }
+
+    public function create($data)
+    {
+        try {
+            $this->service->create($data);
+
+            return [
+                "status" => 201,
+                "message" => "Restriction created successfully"
+            ];
+
+        } catch (RestrictionException $e) {
+            return [
+                "status" => 400,
                 "error_code" => "CREATE_FAILED",
-                "message" => "Failed to create restriction"
+                "message" => $e->getMessage()
             ];
         }
-
-        return [
-            "status" => 201,
-            "message" => "Restriction created successfully"
-        ];
     }
 
-   
-    public function update($id, $data) {
-        if (!is_numeric($id)) {
+    public function update($id, $data)
+    {
+        try {
+            $this->service->update($id, $data);
+
             return [
-                "status" => 400,
-                "error_code" => "INVALID_ID",
-                "message" => "ID must be numeric"
+                "status" => 200,
+                "message" => "Restriction updated successfully"
             ];
-        }
 
-        $exists = $this->model->findById($id);
+        } catch (RestrictionException $e) {
 
-        if (!$exists) {
+            $message = $e->getMessage();
+
+            $status = ($message === "Restriction not found") ? 404 : 400;
+
             return [
-                "status" => 404,
-                "error_code" => "RESTRICTION_NOT_FOUND",
-                "message" => "Restriction not found"
-            ];
-        }
-
-        $result = $this->model->update($id, $data);
-
-        if (!$result) {
-            return [
-                "status" => 500,
+                "status" => $status,
                 "error_code" => "UPDATE_FAILED",
-                "message" => "Failed to update restriction"
+                "message" => $message
             ];
         }
-
-        return [
-            "status" => 200,
-            "message" => "Restriction updated successfully"
-        ];
     }
 
-    
-    public function delete($id) {
-        if (!is_numeric($id)) {
+    public function delete($id)
+    {
+        try {
+            $this->service->delete($id);
+
             return [
-                "status" => 400,
-                "error_code" => "INVALID_ID",
-                "message" => "ID must be numeric"
+                "status" => 200,
+                "message" => "Restriction deleted successfully"
             ];
-        }
 
-        $exists = $this->model->findById($id);
+        } catch (RestrictionException $e) {
 
-        if (!$exists) {
+            $message = $e->getMessage();
+
+            $status = ($message === "Restriction not found") ? 404 : 400;
+
             return [
-                "status" => 404,
-                "error_code" => "RESTRICTION_NOT_FOUND",
-                "message" => "Restriction not found"
-            ];
-        }
-
-        $result = $this->model->delete($id);
-
-        if (!$result) {
-            return [
-                "status" => 500,
+                "status" => $status,
                 "error_code" => "DELETE_FAILED",
-                "message" => "Failed to delete restriction"
+                "message" => $message
             ];
         }
-
-        return [
-            "status" => 200,
-            "message" => "Restriction deleted successfully"
-        ];
     }
 }

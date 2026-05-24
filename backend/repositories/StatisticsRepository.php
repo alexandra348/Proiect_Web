@@ -1,5 +1,6 @@
 <?php
-class Statistics {
+
+class StatisticsRepository {
     private $conn;
 
     public function __construct($db) {
@@ -54,7 +55,7 @@ class Statistics {
             JOIN tried_drinks td ON d.id = td.drink_id
             GROUP BY d.id, d.name
             ORDER BY avg_rating DESC
-            LIMIT 10
+            LIMIT 5
         ");
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

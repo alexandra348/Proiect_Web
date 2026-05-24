@@ -1,58 +1,36 @@
 <?php
-require_once __DIR__ . '/../models/User.php';
-require_once __DIR__ . '/../models/Provider.php';
+
+require_once __DIR__ . '/../services/AuthService.php';
 
 class AuthController {
-    private $db;
 
-    public function __construct($db) {
-        $this->db = $db;
+    private AuthService $service;
+
+    public function __construct($db)
+    {
+        $this->service = new AuthService($db);
     }
 
-    public function login($data) {
-       
-        if (empty($data['email']) || empty($data['password'])) {
-            return [
-                "status" => 400,
-                "error_code" => "MISSING_CREDENTIALS",
-                "message" => "Email and password are required"
-            ];
-        }
-
-        $userModel = new User($this->db);
-        $providerModel = new Provider($this->db);
-
-        
-        $user = $userModel->findByEmail($data['email']);
-
-        if ($user && password_verify($data['password'], $user['password'])) {
-            unset($user['password']); // security
+    public function login($data)
+    {
+        try {
+            $result = $this->service->login($data);
 
             return [
                 "status" => 200,
-                "type" => "user",
-                "data" => $user
+                "type" => $result["type"],
+                "data" => $result["data"]
             ];
-        }
 
-    
-        $provider = $providerModel->findByEmail($data['email']);
+        } catch (Exception $e) {
 
-        if ($provider && password_verify($data['password'], $provider['password'])) {
-            unset($provider['password']); // security
+            $status = ($e->getMessage() === "Invalid email or password") ? 401 : 400;
 
             return [
-                "status" => 200,
-                "type" => "provider",
-                "data" => $provider
+                "status" => $status,
+                "error_code" => "LOGIN_FAILED",
+                "message" => $e->getMessage()
             ];
         }
-
-        
-        return [
-            "status" => 401,
-            "error_code" => "INVALID_CREDENTIALS",
-            "message" => "Invalid email or password"
-        ];
     }
 }

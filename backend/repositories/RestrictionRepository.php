@@ -1,5 +1,5 @@
 <?php
-class Restriction {
+class RestrictionRepository {
     private $conn;
 
     public function __construct($db) {

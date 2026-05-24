@@ -1,29 +1,29 @@
 <?php
-class Category {
+class IngredientRepository {
     private $conn;
 
     public function __construct($db) {
         $this->conn = $db;
     }
 
-
+   
     public function getAll() {
         return $this->conn
-            ->query("SELECT * FROM categories ORDER BY name ASC")
+            ->query("SELECT * FROM ingredients ORDER BY name ASC")
             ->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    
+   
     public function findById($id) {
-        $stmt = $this->conn->prepare("SELECT * FROM categories WHERE id=:id LIMIT 1");
+        $stmt = $this->conn->prepare("SELECT * FROM ingredients WHERE id=:id");
         $stmt->execute([":id"=>$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-   
+    
     public function create($data) {
         $stmt = $this->conn->prepare("
-            INSERT INTO categories (name)
+            INSERT INTO ingredients (name)
             VALUES (:name)
         ");
 
@@ -35,7 +35,7 @@ class Category {
     
     public function update($id, $data) {
         $stmt = $this->conn->prepare("
-            UPDATE categories SET name=:name WHERE id=:id
+            UPDATE ingredients SET name=:name WHERE id=:id
         ");
 
         return $stmt->execute([
@@ -46,7 +46,7 @@ class Category {
 
     
     public function delete($id) {
-        $stmt = $this->conn->prepare("DELETE FROM categories WHERE id=:id");
+        $stmt = $this->conn->prepare("DELETE FROM ingredients WHERE id=:id");
         return $stmt->execute([":id"=>$id]);
     }
 }

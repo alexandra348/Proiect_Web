@@ -1,57 +1,96 @@
 <?php
-require_once __DIR__ . '/../models/Statistics.php';
+
+require_once __DIR__ . '/../services/StatisticsService.php';
+require_once __DIR__ . '/../exceptions/StatisticsException.php';
 
 class StatisticsController {
-    private $model;
+    private StatisticsService $service;
 
-    public function __construct($db) {
-        $this->model = new Statistics($db);
+    public function __construct(StatisticsService $service)
+    {
+        $this->service = $service;
     }
 
-    
     public function dashboard() {
-        $data = [
-            "top_drinks" => $this->model->topDrinks(),
-            "top_categories" => $this->model->topCategories(),
-            "top_providers" => $this->model->topProviders(),
-            "top_rated" => $this->model->topRated()
-        ];
+        try {
+            $data = [
+                "top_drinks" => $this->service->topDrinks(),
+                "top_categories" => $this->service->topCategories(),
+                "top_providers" => $this->service->topProviders(),
+                "top_rated" => $this->service->topRated()
+            ];
 
-        return [
-            "status" => 200,
-            "data" => $data
-        ];
+            return [
+                "status" => 200,
+                "data" => $data
+            ];
+
+        } catch (StatisticsException $e) {
+            return [
+                "status" => 500,
+                "error" => "Dashboard data could not be loaded"
+            ];
+        } catch (Exception $e) {
+            return [
+                "status" => 500,
+                "error" => "Unexpected server error"
+            ];
+        }
     }
 
-    
     public function topDrinks() {
-        return [
-            "status" => 200,
-            "data" => $this->model->topDrinks()
-        ];
+        try {
+            return [
+                "status" => 200,
+                "data" => $this->service->topDrinks()
+            ];
+        } catch (StatisticsException $e) {
+            return [
+                "status" => 500,
+                "error" => "Failed to load top drinks"
+            ];
+        }
     }
 
-    
     public function topCategories() {
-        return [
-            "status" => 200,
-            "data" => $this->model->topCategories()
-        ];
+        try {
+            return [
+                "status" => 200,
+                "data" => $this->service->topCategories()
+            ];
+        } catch (StatisticsException $e) {
+            return [
+                "status" => 500,
+                "error" => "Failed to load top categories"
+            ];
+        }
     }
 
-    
     public function topProviders() {
-        return [
-            "status" => 200,
-            "data" => $this->model->topProviders()
-        ];
+        try {
+            return [
+                "status" => 200,
+                "data" => $this->service->topProviders()
+            ];
+        } catch (StatisticsException $e) {
+            return [
+                "status" => 500,
+                "error" => "Failed to load top providers"
+            ];
+        }
     }
 
-    
     public function topRated() {
-        return [
-            "status" => 200,
-            "data" => $this->model->topRated()
-        ];
+        try {
+            return [
+                "status" => 200,
+                "data" => $this->service->topRated()
+            ];
+        } catch (StatisticsException $e) {
+            return [
+                "status" => 500,
+                "error" => "Failed to load top rated drinks"
+            ];
+        }
     }
 }

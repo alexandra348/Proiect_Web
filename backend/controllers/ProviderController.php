@@ -1,169 +1,121 @@
 <?php
-require_once __DIR__ . '/../models/Provider.php';
+
+require_once __DIR__ . '/../services/ProviderService.php';
+require_once __DIR__ . '/../exceptions/ProviderException.php';
 
 class ProviderController {
-    private $model;
 
-    public function __construct($db) {
-        $this->model = new Provider($db);
+    private ProviderService $service;
+
+    public function __construct(ProviderService $service)
+    {
+        $this->service = $service;
     }
 
-    
-    public function getAllProviders() {
-        return [
-            "status" => 200,
-            "data" => $this->model->getAll()
-        ];
-    }
-
-    
-    public function getProviderById($id) {
-        if (!is_numeric($id)) {
+    public function getAllProviders()
+    {
+        try {
             return [
-                "status" => 400,
-                "error_code" => "INVALID_ID",
-                "message" => "ID must be numeric"
+                "status" => 200,
+                "data" => $this->service->getAll()
             ];
-        }
-
-        $provider = $this->model->findById($id);
-
-        if (!$provider) {
-            return [
-                "status" => 404,
-                "error_code" => "PROVIDER_NOT_FOUND",
-                "message" => "Provider not found"
-            ];
-        }
-
-        return [
-            "status" => 200,
-            "data" => $provider
-        ];
-    }
-
-    
-    public function create($data) {
-        if (
-            empty($data['name']) ||
-            empty($data['email']) ||
-            empty($data['password'])
-        ) {
-            return [
-                "status" => 400,
-                "error_code" => "MISSING_FIELDS",
-                "message" => "Name, email and password are required"
-            ];
-        }
-
-        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            return [
-                "status" => 400,
-                "error_code" => "INVALID_EMAIL",
-                "message" => "Invalid email format"
-            ];
-        }
-
-        
-        $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
-
-        $result = $this->model->create($data);
-
-        if (!$result) {
+        } catch (ProviderException $e) {
             return [
                 "status" => 500,
+                "error_code" => "FETCH_FAILED",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
+    public function getProviderById($id)
+    {
+        try {
+            $provider = $this->service->findById($id);
+
+            return [
+                "status" => 200,
+                "data" => $provider
+            ];
+
+        } catch (ProviderException $e) {
+
+            $message = $e->getMessage();
+
+            $status = ($message === "Provider not found") ? 404 : 400;
+
+            return [
+                "status" => $status,
+                "error_code" => "PROVIDER_ERROR",
+                "message" => $message
+            ];
+        }
+    }
+
+    public function create($data)
+    {
+        try {
+            $this->service->create($data);
+
+            return [
+                "status" => 201,
+                "message" => "Provider created successfully"
+            ];
+
+        } catch (ProviderException $e) {
+            return [
+                "status" => 400,
                 "error_code" => "CREATE_FAILED",
-                "message" => "Failed to create provider"
+                "message" => $e->getMessage()
             ];
         }
-
-        return [
-            "status" => 201,
-            "message" => "Provider created successfully"
-        ];
     }
 
-   
-    public function update($id, $data) {
-        if (!is_numeric($id)) {
+    public function update($id, $data)
+    {
+        try {
+            $this->service->update($id, $data);
+
             return [
-                "status" => 400,
-                "error_code" => "INVALID_ID",
-                "message" => "ID must be numeric"
+                "status" => 200,
+                "message" => "Provider updated successfully"
             ];
-        }
 
-        $exists = $this->model->findById($id);
+        } catch (ProviderException $e) {
 
-        if (!$exists) {
+            $message = $e->getMessage();
+
+            $status = ($message === "Provider not found") ? 404 : 400;
+
             return [
-                "status" => 404,
-                "error_code" => "PROVIDER_NOT_FOUND",
-                "message" => "Provider not found"
-            ];
-        }
-
-        if (!empty($data['email']) && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            return [
-                "status" => 400,
-                "error_code" => "INVALID_EMAIL",
-                "message" => "Invalid email format"
-            ];
-        }
-
-        if (!empty($data['password'])) {
-            $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
-        }
-
-        $result = $this->model->update($id, $data);
-
-        if (!$result) {
-            return [
-                "status" => 500,
+                "status" => $status,
                 "error_code" => "UPDATE_FAILED",
-                "message" => "Failed to update provider"
+                "message" => $message
             ];
         }
-
-        return [
-            "status" => 200,
-            "message" => "Provider updated successfully"
-        ];
     }
 
-    
-    public function delete($id) {
-        if (!is_numeric($id)) {
+    public function delete($id)
+    {
+        try {
+            $this->service->delete($id);
+
             return [
-                "status" => 400,
-                "error_code" => "INVALID_ID",
-                "message" => "ID must be numeric"
+                "status" => 200,
+                "message" => "Provider deleted successfully"
             ];
-        }
 
-        $exists = $this->model->findById($id);
+        } catch (ProviderException $e) {
 
-        if (!$exists) {
+            $message = $e->getMessage();
+
+            $status = ($message === "Provider not found") ? 404 : 400;
+
             return [
-                "status" => 404,
-                "error_code" => "PROVIDER_NOT_FOUND",
-                "message" => "Provider not found"
-            ];
-        }
-
-        $result = $this->model->delete($id);
-
-        if (!$result) {
-            return [
-                "status" => 500,
+                "status" => $status,
                 "error_code" => "DELETE_FAILED",
-                "message" => "Failed to delete provider"
+                "message" => $message
             ];
         }
-
-        return [
-            "status" => 200,
-            "message" => "Provider deleted successfully"
-        ];
     }
 }

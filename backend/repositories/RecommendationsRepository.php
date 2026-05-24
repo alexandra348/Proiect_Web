@@ -1,5 +1,5 @@
 <?php
-class Recommendations {
+class RecommendationsRepository {
     private $conn;
 
     public function __construct($db) {
@@ -8,9 +8,6 @@ class Recommendations {
 
     public function getRecommended($user_id) {
 
-        // - exclude avoided ingredients
-        // - exclude restrictions (simplificat)
-        // - prioritize favorite categories
 
         $query = "
             SELECT DISTINCT d.*

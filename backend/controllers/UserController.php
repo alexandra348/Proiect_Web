@@ -1,87 +1,257 @@
 <?php
-require_once __DIR__ . '/../models/User.php';
+
+require_once __DIR__ . '/../services/UserService.php';
 
 class UserController {
-    private $model;
 
-    public function __construct($db) {
-        $this->model = new User($db);
+    private UserService $service;
+
+    public function __construct(UserService $service)
+    {
+        $this->service = $service;
     }
 
-    
-    public function register($data) {
-        if (
-            empty($data['name']) ||
-            empty($data['email']) ||
-            empty($data['password'])
-        ) {
+
+    public function register($data)
+    {
+        try {
+
+            $this->service->create($data);
+
+            http_response_code(201);
+
             return [
-                "status" => 400,
-                "error_code" => "MISSING_FIELDS",
-                "message" => "Name, email and password are required"
+                "success" => true,
+                "message" => "User created successfully"
+            ];
+
+        } catch(Exception $e) {
+
+            http_response_code(400);
+
+            return [
+                "success" => false,
+                "error" => $e->getMessage()
             ];
         }
-
-        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            return [
-                "status" => 400,
-                "error_code" => "INVALID_EMAIL",
-                "message" => "Invalid email format"
-            ];
-        }
-
-        
-        $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
-
-        $result = $this->model->create($data);
-
-        if (!$result) {
-            return [
-                "status" => 500,
-                "error_code" => "REGISTER_FAILED",
-                "message" => "Failed to register user"
-            ];
-        }
-
-        return [
-            "status" => 201,
-            "message" => "User registered successfully"
-        ];
     }
 
-    public function getAllUsers() {
-        return [
-            "status" => 200,
-            "data" => $this->model->getAll()
-        ];
+
+
+    public function login($data)
+    {
+        try {
+
+            if(
+                empty($data['email']) ||
+                empty($data['password'])
+            ){
+                throw new Exception(
+                    "Email and password required"
+                );
+            }
+
+
+            $user = $this->service->login(
+                $data['email'],
+                $data['password']
+            );
+
+            http_response_code(200);
+
+            return [
+                "success" => true,
+                "data" => $user
+            ];
+
+        }
+        catch(Exception $e){
+
+            http_response_code(401);
+
+            return [
+                "success"=>false,
+                "error"=>$e->getMessage()
+            ];
+        }
     }
 
-    
-    public function getUserById($id) {
-        if (!is_numeric($id)) {
+
+
+    public function getAll()
+    {
+        try {
+
+            $users=
+            $this->service
+                 ->getAll();
+
+            http_response_code(200);
+
             return [
-                "status" => 400,
-                "error_code" => "INVALID_ID",
-                "message" => "ID must be numeric"
+                "success"=>true,
+                "data"=>$users
+            ];
+
+        }
+        catch(Exception $e){
+
+            http_response_code(500);
+
+            return [
+                "success"=>false,
+                "error"=>$e->getMessage()
+            ];
+        }
+    }
+
+
+
+    public function getById($id)
+    {
+
+        try {
+
+            $user=
+            $this->service
+                 ->findById($id);
+
+            http_response_code(200);
+
+            return [
+                "success"=>true,
+                "data"=>$user
+            ];
+
+        }
+        catch(Exception $e){
+
+            http_response_code(404);
+
+            return [
+                "success"=>false,
+                "error"=>$e->getMessage()
             ];
         }
 
-        $user = $this->model->findById($id);
+    }
 
-        if (!$user) {
+
+
+    public function update(
+        $id,
+        $data
+    )
+    {
+
+        try{
+
+            $this->service
+                 ->update(
+                    $id,
+                    $data
+                 );
+
+            http_response_code(200);
+
             return [
-                "status" => 404,
-                "error_code" => "USER_NOT_FOUND",
-                "message" => "User not found"
+                "success"=>true,
+                "message"=>"User updated"
+            ];
+
+        }
+        catch(Exception $e){
+
+            http_response_code(400);
+
+            return [
+                "success"=>false,
+                "error"=>$e->getMessage()
             ];
         }
 
-        
-        unset($user['password']);
-
-        return [
-            "status" => 200,
-            "data" => $user
-        ];
     }
+
+
+    public function changePassword(
+        $id,
+        $data
+    )
+    {
+
+        try{
+
+            if(
+                empty(
+                    $data['oldPassword']
+                )
+                ||
+                empty(
+                    $data['newPassword']
+                )
+            ){
+                throw new Exception(
+                    "Passwords required"
+                );
+            }
+
+
+            $this->service
+                 ->changePassword(
+                    $id,
+                    $data['oldPassword'],
+                    $data['newPassword']
+                 );
+
+
+            http_response_code(200);
+
+            return [
+                "success"=>true,
+                "message"=>"Password updated"
+            ];
+
+        }
+        catch(Exception $e){
+
+            http_response_code(400);
+
+            return [
+                "success"=>false,
+                "error"=>$e->getMessage()
+            ];
+        }
+
+    }
+
+
+
+    public function delete($id)
+    {
+
+        try{
+
+            $this->service
+                 ->delete($id);
+
+            http_response_code(200);
+
+            return [
+                "success"=>true,
+                "message"=>"User deleted"
+            ];
+
+        }
+        catch(Exception $e){
+
+            http_response_code(404);
+
+            return [
+                "success"=>false,
+                "error"=>$e->getMessage()
+            ];
+        }
+
+    }
+
 }

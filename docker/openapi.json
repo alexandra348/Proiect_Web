@@ -1,0 +1,879 @@
+{
+  "openapi":"3.0.0",
+  "info":{
+    "title":"SoftDrinks API",
+    "version":"1.0.0",
+    "description":"API pentru management bauturi, utilizatori, ingrediente, categorii, preferinte si recomandari"
+  },
+
+  "servers":[
+    {
+      "url":"http://localhost:8085/api"
+    }
+  ],
+
+  "tags":[
+    {"name":"Drinks"},
+    {"name":"Categories"},
+    {"name":"Ingredients"},
+    {"name":"Providers"},
+    {"name":"Users"},
+    {"name":"Restrictions"},
+    {"name":"Preferences"},
+    {"name":"Auth"},
+    {"name":"Statistics"},
+    {"name":"Recommendations"}
+  ],
+
+  "components":{
+    "parameters":{
+
+      "IdQuery":{
+        "name":"id",
+        "in":"query",
+        "required":true,
+        "schema":{"type":"integer"}
+      },
+
+      "OptionalIdQuery":{
+        "name":"id",
+        "in":"query",
+        "required":false,
+        "schema":{"type":"integer"}
+      },
+
+      "UserIdQuery":{
+        "name":"user_id",
+        "in":"query",
+        "required":true,
+        "schema":{"type":"integer"}
+      }
+
+    },
+
+    "schemas":{
+
+      "DrinkCreate":{
+        "type":"object",
+        "required":[
+          "name",
+          "price",
+          "provider_id",
+          "category_id"
+        ],
+        "properties":{
+          "name":{"type":"string"},
+          "price":{"type":"number"},
+          "provider_id":{"type":"integer"},
+          "category_id":{"type":"integer"}
+        }
+      },
+
+      "DrinkUpdate":{
+        "type":"object",
+        "required":[
+          "name",
+          "price"
+        ],
+        "properties":{
+          "name":{"type":"string"},
+          "price":{"type":"number"}
+        }
+      },
+
+      "CategoryCreate":{
+        "type":"object",
+        "required":["name"],
+        "properties":{
+          "name":{"type":"string"}
+        }
+      },
+
+      "CategoryUpdate":{
+        "type":"object",
+        "required":["name"],
+        "properties":{
+          "name":{"type":"string"}
+        }
+      },
+
+      "IngredientCreate":{
+        "type":"object",
+        "required":["name"],
+        "properties":{
+          "name":{"type":"string"}
+        }
+      },
+
+      "IngredientUpdate":{
+        "type":"object",
+        "required":["name"],
+        "properties":{
+          "name":{"type":"string"}
+        }
+      },
+
+      "ProviderCreate":{
+        "type":"object",
+        "required":[
+          "name",
+          "email",
+          "password"
+        ],
+        "properties":{
+          "name":{"type":"string"},
+          "email":{"type":"string"},
+          "password":{"type":"string"},
+          "type":{"type":"string"},
+          "address":{"type":"string"},
+          "city":{"type":"string"}
+        }
+      },
+
+      "ProviderUpdate":{
+        "type":"object",
+        "properties":{
+          "name":{"type":"string"},
+          "email":{"type":"string"},
+          "type":{"type":"string"},
+          "address":{"type":"string"},
+          "city":{"type":"string"}
+        }
+      },
+
+      "UserCreate":{
+        "type":"object",
+        "required":[
+          "name",
+          "email",
+          "password"
+        ],
+        "properties":{
+          "name":{"type":"string"},
+          "email":{"type":"string"},
+          "password":{"type":"string"}
+        }
+      },
+
+      "UserUpdate":{
+        "type":"object",
+        "properties":{
+          "name":{"type":"string"},
+          "email":{"type":"string"},
+          "password":{"type":"string"}
+        }
+      },
+
+      "RestrictionCreate":{
+        "type":"object",
+        "required":["name"],
+        "properties":{
+          "name":{"type":"string"}
+        }
+      },
+
+      "RestrictionUpdate":{
+        "type":"object",
+        "properties":{
+          "name":{"type":"string"}
+        }
+      },
+
+      "Login":{
+        "type":"object",
+        "required":[
+          "email",
+          "password"
+        ],
+        "properties":{
+          "email":{"type":"string"},
+          "password":{"type":"string"}
+        }
+      },
+
+      "Wishlist":{
+        "type":"object",
+        "required":[
+          "user_id",
+          "drink_id"
+        ],
+        "properties":{
+          "user_id":{"type":"integer"},
+          "drink_id":{"type":"integer"}
+        }
+      },
+
+      "TriedDrink":{
+        "type":"object",
+        "required":[
+          "user_id",
+          "drink_id",
+          "rating"
+        ],
+        "properties":{
+          "user_id":{"type":"integer"},
+          "drink_id":{"type":"integer"},
+          "rating":{"type":"integer"},
+          "notes":{"type":"string"}
+        }
+      },
+
+      "FavoriteCategory":{
+        "type":"object",
+        "required":[
+          "user_id",
+          "category_id"
+        ],
+        "properties":{
+          "user_id":{"type":"integer"},
+          "category_id":{"type":"integer"}
+        }
+      },
+
+      "FavoriteIngredient":{
+        "type":"object",
+        "required":[
+          "user_id",
+          "ingredient_id"
+        ],
+        "properties":{
+          "user_id":{"type":"integer"},
+          "ingredient_id":{"type":"integer"}
+        }
+      },
+
+      "AvoidedIngredient":{
+        "type":"object",
+        "required":[
+          "user_id",
+          "ingredient_id"
+        ],
+        "properties":{
+          "user_id":{"type":"integer"},
+          "ingredient_id":{"type":"integer"}
+        }
+      },
+
+      "UserRestriction":{
+        "type":"object",
+        "required":[
+          "user_id",
+          "restriction_id"
+        ],
+        "properties":{
+          "user_id":{"type":"integer"},
+          "restriction_id":{"type":"integer"}
+        }
+      },
+
+      "FavoriteProvider":{
+        "type":"object",
+        "required":[
+          "user_id",
+          "provider_id"
+        ],
+        "properties":{
+          "user_id":{"type":"integer"},
+          "provider_id":{"type":"integer"}
+        }
+      }
+
+    }
+  },
+
+  "paths":{
+
+    "/drinks":{
+      "get":{
+        "tags":["Drinks"],
+        "parameters":[
+          {
+            "$ref":"#/components/parameters/OptionalIdQuery"
+          }
+        ],
+        "responses":{"200":{"description":"OK"}}
+      },
+
+      "post":{
+        "tags":["Drinks"],
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/DrinkCreate"
+              }
+            }
+          }
+        },
+        "responses":{"201":{"description":"Created"}}
+      },
+
+      "put":{
+        "tags":["Drinks"],
+        "parameters":[
+          {
+            "$ref":"#/components/parameters/IdQuery"
+          }
+        ],
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/DrinkUpdate"
+              }
+            }
+          }
+        },
+        "responses":{"200":{"description":"Updated"}}
+      },
+
+      "delete":{
+        "tags":["Drinks"],
+        "parameters":[
+          {
+            "$ref":"#/components/parameters/IdQuery"
+          }
+        ],
+        "responses":{"200":{"description":"Deleted"}}
+      }
+    },
+
+    "/categories":{
+      "get":{
+        "tags":["Categories"],
+        "parameters":[
+          {
+            "$ref":"#/components/parameters/OptionalIdQuery"
+          }
+        ],
+        "responses":{"200":{"description":"OK"}}
+      },
+
+      "post":{
+        "tags":["Categories"],
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/CategoryCreate"
+              }
+            }
+          }
+        },
+        "responses":{"201":{"description":"Created"}}
+      },
+
+      "put":{
+        "tags":["Categories"],
+        "parameters":[
+          {
+            "$ref":"#/components/parameters/IdQuery"
+          }
+        ],
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/CategoryUpdate"
+              }
+            }
+          }
+        },
+        "responses":{"200":{"description":"Updated"}}
+      },
+
+      "delete":{
+        "tags":["Categories"],
+        "parameters":[
+          {
+            "$ref":"#/components/parameters/IdQuery"
+          }
+        ],
+        "responses":{"200":{"description":"Deleted"}}
+      }
+    },
+
+    "/ingredients":{
+  "get":{
+    "tags":["Ingredients"],
+    "summary":"Get all ingredients or ingredient by id",
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/OptionalIdQuery"
+      }
+    ],
+    "responses":{"200":{"description":"OK"}}
+  },
+
+  "post":{
+    "tags":["Ingredients"],
+    "summary":"Create ingredient",
+    "requestBody":{
+      "required":true,
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/IngredientCreate"
+          }
+        }
+      }
+    },
+    "responses":{"201":{"description":"Created"}}
+  },
+
+  "put":{
+    "tags":["Ingredients"],
+    "summary":"Update ingredient",
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/IdQuery"
+      }
+    ],
+    "requestBody":{
+      "required":true,
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/IngredientUpdate"
+          }
+        }
+      }
+    },
+    "responses":{"200":{"description":"Updated"}}
+  },
+
+  "delete":{
+    "tags":["Ingredients"],
+    "summary":"Delete ingredient",
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/IdQuery"
+      }
+    ],
+    "responses":{"200":{"description":"Deleted"}}
+  }
+},
+
+"/providers":{
+  "get":{
+    "tags":["Providers"],
+    "summary":"Get providers or provider by id",
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/OptionalIdQuery"
+      }
+    ],
+    "responses":{"200":{"description":"OK"}}
+  },
+
+  "post":{
+    "tags":["Providers"],
+    "summary":"Create provider",
+    "requestBody":{
+      "required":true,
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/ProviderCreate"
+          }
+        }
+      }
+    },
+    "responses":{"201":{"description":"Created"}}
+  },
+
+  "put":{
+    "tags":["Providers"],
+    "summary":"Update provider",
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/IdQuery"
+      }
+    ],
+    "requestBody":{
+      "required":true,
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/ProviderUpdate"
+          }
+        }
+      }
+    },
+    "responses":{"200":{"description":"Updated"}}
+  },
+
+  "delete":{
+    "tags":["Providers"],
+    "summary":"Delete provider",
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/IdQuery"
+      }
+    ],
+    "responses":{"200":{"description":"Deleted"}}
+  }
+},
+
+"/users":{
+  "get":{
+    "tags":["Users"],
+    "summary":"Get users or user by id",
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/OptionalIdQuery"
+      }
+    ],
+    "responses":{"200":{"description":"OK"}}
+  },
+
+  "post":{
+    "tags":["Users"],
+    "summary":"Register user",
+    "requestBody":{
+      "required":true,
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/UserCreate"
+          }
+        }
+      }
+    },
+    "responses":{"201":{"description":"Created"}}
+  },
+
+  "put":{
+    "tags":["Users"],
+    "summary":"Update user",
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/IdQuery"
+      }
+    ],
+    "requestBody":{
+      "required":true,
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/UserUpdate"
+          }
+        }
+      }
+    },
+    "responses":{"200":{"description":"Updated"}}
+  },
+
+  "delete":{
+    "tags":["Users"],
+    "summary":"Delete user",
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/IdQuery"
+      }
+    ],
+    "responses":{"200":{"description":"Deleted"}}
+  }
+},
+
+"/restrictions":{
+  "get":{
+    "tags":["Restrictions"],
+    "summary":"Get restrictions or restriction by id",
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/OptionalIdQuery"
+      }
+    ],
+    "responses":{"200":{"description":"OK"}}
+  },
+
+  "post":{
+    "tags":["Restrictions"],
+    "summary":"Create restriction",
+    "requestBody":{
+      "required":true,
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/RestrictionCreate"
+          }
+        }
+      }
+    },
+    "responses":{"201":{"description":"Created"}}
+  },
+
+  "put":{
+    "tags":["Restrictions"],
+    "summary":"Update restriction",
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/IdQuery"
+      }
+    ],
+    "requestBody":{
+      "required":true,
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/RestrictionUpdate"
+          }
+        }
+      }
+    },
+    "responses":{"200":{"description":"Updated"}}
+  },
+
+  "delete":{
+    "tags":["Restrictions"],
+    "summary":"Delete restriction",
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/IdQuery"
+      }
+    ],
+    "responses":{"200":{"description":"Deleted"}}
+  }
+},
+
+"/login":{
+  "post":{
+    "tags":["Auth"],
+    "summary":"Login user/provider",
+    "requestBody":{
+      "required":true,
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/Login"
+          }
+        }
+      }
+    },
+    "responses":{
+      "200":{"description":"Success"},
+      "401":{"description":"Invalid credentials"}
+    }
+  }
+},
+
+"/statistics":{
+  "get":{
+    "tags":["Statistics"],
+    "summary":"Dashboard statistics",
+    "responses":{
+      "200":{
+        "description":"Statistics data"
+      }
+    }
+  }
+},
+
+"/recommendations":{
+  "get":{
+    "tags":["Recommendations"],
+    "summary":"Get user recommendations",
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/UserIdQuery"
+      }
+    ],
+    "responses":{
+      "200":{
+        "description":"Recommended drinks"
+      }
+    }
+  }
+},
+
+"/preferences/wishlist":{
+  "get":{
+    "tags":["Preferences"],
+    "summary":"Get wishlist",
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/UserIdQuery"
+      }
+    ],
+    "responses":{"200":{"description":"OK"}}
+  },
+
+  "post":{
+    "tags":["Preferences"],
+    "summary":"Add to wishlist",
+    "requestBody":{
+      "required":true,
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/Wishlist"
+          }
+        }
+      }
+    },
+    "responses":{"201":{"description":"Added"}}
+  }
+},
+
+"/preferences/tried":{
+  "get":{
+    "tags":["Preferences"],
+    "summary":"Get tried drinks",
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/UserIdQuery"
+      }
+    ],
+    "responses":{"200":{"description":"OK"}}
+  },
+
+  "post":{
+    "tags":["Preferences"],
+    "summary":"Add tried drink",
+    "requestBody":{
+      "required":true,
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/TriedDrink"
+          }
+        }
+      }
+    },
+    "responses":{"201":{"description":"Added"}}
+  }
+},
+
+"/preferences/categories":{
+  "get":{
+    "tags":["Preferences"],
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/UserIdQuery"
+      }
+    ],
+    "responses":{"200":{"description":"OK"}}
+  },
+
+  "post":{
+    "tags":["Preferences"],
+    "requestBody":{
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/FavoriteCategory"
+          }
+        }
+      }
+    },
+    "responses":{"201":{"description":"Added"}}
+  }
+},
+
+"/preferences/favorite-ingredients":{
+  "get":{
+    "tags":["Preferences"],
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/UserIdQuery"
+      }
+    ],
+    "responses":{"200":{"description":"OK"}}
+  },
+
+  "post":{
+    "tags":["Preferences"],
+    "requestBody":{
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/FavoriteIngredient"
+          }
+        }
+      }
+    },
+    "responses":{"201":{"description":"Added"}}
+  }
+},
+
+"/preferences/avoided-ingredients":{
+  "get":{
+    "tags":["Preferences"],
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/UserIdQuery"
+      }
+    ],
+    "responses":{"200":{"description":"OK"}}
+  },
+
+  "post":{
+    "tags":["Preferences"],
+    "requestBody":{
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/AvoidedIngredient"
+          }
+        }
+      }
+    },
+    "responses":{"201":{"description":"Added"}}
+  }
+},
+
+"/preferences/restrictions":{
+  "get":{
+    "tags":["Preferences"],
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/UserIdQuery"
+      }
+    ],
+    "responses":{"200":{"description":"OK"}}
+  },
+
+  "post":{
+    "tags":["Preferences"],
+    "requestBody":{
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/UserRestriction"
+          }
+        }
+      }
+    },
+    "responses":{"201":{"description":"Added"}}
+  }
+},
+
+"/preferences/providers":{
+  "get":{
+    "tags":["Preferences"],
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/UserIdQuery"
+      }
+    ],
+    "responses":{"200":{"description":"OK"}}
+  },
+
+  "post":{
+    "tags":["Preferences"],
+    "requestBody":{
+      "content":{
+        "application/json":{
+          "schema":{
+            "$ref":"#/components/schemas/FavoriteProvider"
+          }
+        }
+      }
+    },
+    "responses":{"201":{"description":"Added"}}
+  }
+}
+
+  }
+}

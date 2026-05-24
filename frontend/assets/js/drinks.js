@@ -1,40 +1,28 @@
-import { getDrinks, deleteDrink } from "./api.js";
+import { getDrinks } from "./api.js";
 
-document.addEventListener("DOMContentLoaded", async () => {
+export async function initDrinks() {
 
-    const res = await getDrinks();
+    const response = await getDrinks();
 
-    if (res.status !== 200) {
-        console.error(res.error);
-        return;
-    }
+    if (!response.success) return;
 
-    const drinks = res.data;
+    const drinks = response.data;
 
-    const container = document.querySelector("#drinks-container");
     const template = document.querySelector("#drink-card-template");
+    const container = document.querySelector("#drinks-container");
 
-    drinks.forEach(drink => {
+    if (!template || !container) return;
+
+    container.innerHTML = "";
+
+    for (let drink of drinks) {
+
         const clone = template.content.cloneNode(true);
 
         clone.querySelector(".drink-name").textContent = drink.name;
+        clone.querySelector(".drink-category").textContent = drink.category_name || "Drink";
         clone.querySelector(".drink-price").textContent = `${drink.price} RON`;
-        clone.querySelector(".drink-category").textContent = drink.category_id;
 
         container.appendChild(clone);
-    });
-
-    // delete
-    document.addEventListener("click", async (e) => {
-        if (e.target.classList.contains("btn-delete")) {
-            const id = e.target.closest(".drink-card").dataset.id;
-
-            const res = await deleteDrink(id);
-
-            if (res.status === 200) {
-                location.reload();
-            }
-        }
-    });
-
-});
+    }
+}

@@ -1,26 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soft Drinks App</title>
 
-    <link rel="stylesheet" href="../assets/css/styles.css">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>Dashboard</title>
+
+<link rel="stylesheet" href="/assets/css/styles.css">
+<link rel="stylesheet" href="/assets/css/dashboard.css">
+<link rel="stylesheet" href="/assets/css/cards.css">
+<link rel="stylesheet" href="/assets/css/forms.css">
+<link rel="stylesheet" href="/assets/css/responsive.css">
+
 </head>
 
 <body>
 
-    <h1>Welcome to Soft Drinks App</h1>
+<div class="main-layout">
 
-    <nav>
-        <a href="./login.html">Login</a>
-        <a href="./users.html">View Users</a>
-        <a href="./drinks.html">Drinks</a>
-        <a href="./providers.html">Providers</a>
-        <a href="./statistics.html">Statistics</a>
-        <a href="./shopping-list.html">Shopping List</a>
-        <a href="./dashboard.html">Dashboard</a>
-    </nav>
+<aside class="sidebar">
+
+<div class="logo">
+Soft Drinks
+</div>
+
+<a href="index.html"
+class="nav-item active">
+Dashboard
+</a>
+
+<a href="statistics.html"
+class="nav-item">
+Statistics
+</a>
+
+<a href="recommendations.html"
+class="nav-item">
+Recommendations
+</a>
+
+<a href="profile.html"
+class="nav-item">
+Profile
+</a>
+
+</aside>
+
+<div class="content">
+
+<div id="navbar"></div>
+
+<section>
+
+<h1>
+Discover Drinks
+</h1>
+
+<p>
+Browse and manage products
+</p>
+
+</section>
+
+<br>
+
+<div id="drinks-container" class="grid"></div>
+
+<template id="drink-card-template">
+    <div class="drink-card">
+        <h3 class="drink-name"></h3>
+        <p class="drink-price"></p>
+        <p class="drink-category"></p>
+    </div>
+</template>
+
+<div id="footer"></div>
+
+</div>
+
+</div>
+
+<script type="module" src="../assets/js/app.js"></script>
 
 </body>
 </html>

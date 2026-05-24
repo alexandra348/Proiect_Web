@@ -1,5 +1,5 @@
 <?php
-class Preference {
+class PreferenceRepository {
     private $conn;
 
     public function __construct($db) {

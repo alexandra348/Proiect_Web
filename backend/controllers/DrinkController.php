@@ -1,145 +1,119 @@
 <?php
-require_once __DIR__ . '/../models/Drink.php';
+
+require_once __DIR__ . '/../services/DrinkService.php';
+require_once __DIR__ . '/../exceptions/DrinkException.php';
 
 class DrinkController {
-    private $model;
 
-    public function __construct($db) {
-        $this->model = new Drink($db);
+    private DrinkService $service;
+
+    public function __construct(DrinkService $service)
+    {
+        $this->service = $service;
     }
 
-    public function getAllDrinks() {
-        return [
-            "status" => 200,
-            "data" => $this->model->getAll()
-        ];
-    }
-
-    public function getDrinkById($id) {
-        if (!is_numeric($id)) {
+    public function getAllDrinks()
+    {
+        try {
             return [
-                "status" => 400,
-                "error_code" => "INVALID_ID",
-                "message" => "ID must be numeric"
+                "status" => 200,
+                "data" => $this->service->getAll()
             ];
-        }
-
-        $drink = $this->model->findById($id);
-
-        if (!$drink) {
-            return [
-                "status" => 404,
-                "error_code" => "DRINK_NOT_FOUND",
-                "message" => "Drink not found"
-            ];
-        }
-
-        return [
-            "status" => 200,
-            "data" => $drink
-        ];
-    }
-
-    public function create($data) {
-        if (empty($data['name']) || empty($data['price']) || empty($data['provider_id']) || empty($data['category_id'])) {
-            return [
-                "status" => 400,
-                "error_code" => "MISSING_FIELDS",
-                "message" => "Missing required fields"
-            ];
-        }
-
-        if (!is_numeric($data['price']) || $data['price'] <= 0) {
-            return [
-                "status" => 400,
-                "error_code" => "INVALID_PRICE",
-                "message" => "Price must be a positive number"
-            ];
-        }
-
-        $result = $this->model->create($data);
-
-        if (!$result) {
+        } catch (DrinkException $e) {
             return [
                 "status" => 500,
+                "error_code" => "FETCH_FAILED",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
+    public function getDrinkById($id)
+    {
+        try {
+            return [
+                "status" => 200,
+                "data" => $this->service->findById($id)
+            ];
+
+        } catch (DrinkException $e) {
+
+            $message = $e->getMessage();
+
+            $status = ($message === "Drink not found") ? 404 : 400;
+
+            return [
+                "status" => $status,
+                "error_code" => "DRINK_ERROR",
+                "message" => $message
+            ];
+        }
+    }
+
+    public function create($data)
+    {
+        try {
+            $this->service->create($data);
+
+            return [
+                "status" => 201,
+                "message" => "Drink created successfully"
+            ];
+
+        } catch (DrinkException $e) {
+            return [
+                "status" => 400,
                 "error_code" => "CREATE_FAILED",
-                "message" => "Failed to create drink"
+                "message" => $e->getMessage()
             ];
         }
-
-        return [
-            "status" => 201,
-            "message" => "Drink created successfully"
-        ];
     }
 
-    public function update($id, $data) {
-        if (!is_numeric($id)) {
+    public function update($id, $data)
+    {
+        try {
+            $this->service->update($id, $data);
+
             return [
-                "status" => 400,
-                "error_code" => "INVALID_ID",
-                "message" => "ID must be numeric"
+                "status" => 200,
+                "message" => "Drink updated successfully"
             ];
-        }
 
-        $exists = $this->model->findById($id);
+        } catch (DrinkException $e) {
 
-        if (!$exists) {
+            $message = $e->getMessage();
+
+            $status = ($message === "Drink not found") ? 404 : 400;
+
             return [
-                "status" => 404,
-                "error_code" => "DRINK_NOT_FOUND",
-                "message" => "Drink not found"
-            ];
-        }
-
-        $result = $this->model->update($id, $data);
-
-        if (!$result) {
-            return [
-                "status" => 500,
+                "status" => $status,
                 "error_code" => "UPDATE_FAILED",
-                "message" => "Failed to update drink"
+                "message" => $message
             ];
         }
-
-        return [
-            "status" => 200,
-            "message" => "Drink updated successfully"
-        ];
     }
 
-    public function delete($id) {
-        if (!is_numeric($id)) {
+    public function delete($id)
+    {
+        try {
+            $this->service->delete($id);
+
             return [
-                "status" => 400,
-                "error_code" => "INVALID_ID",
-                "message" => "ID must be numeric"
+                "status" => 200,
+                "message" => "Drink deleted successfully"
             ];
-        }
 
-        $exists = $this->model->findById($id);
+        } catch (DrinkException $e) {
 
-        if (!$exists) {
+            $message = $e->getMessage();
+
+            $status = ($message === "Drink not found") ? 404 : 400;
+
             return [
-                "status" => 404,
-                "error_code" => "DRINK_NOT_FOUND",
-                "message" => "Drink not found"
-            ];
-        }
-
-        $result = $this->model->delete($id);
-
-        if (!$result) {
-            return [
-                "status" => 500,
+                "status" => $status,
                 "error_code" => "DELETE_FAILED",
-                "message" => "Failed to delete drink"
+                "message" => $message
             ];
         }
-
-        return [
-            "status" => 200,
-            "message" => "Drink deleted successfully"
-        ];
     }
 }
