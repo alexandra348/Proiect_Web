@@ -18,7 +18,6 @@ class AuthController {
 
             return [
                 "status" => 200,
-                "type" => $result["type"],
                 "data" => $result["data"]
             ];
 

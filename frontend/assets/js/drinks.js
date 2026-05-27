@@ -20,8 +20,9 @@ export async function initDrinks() {
         const clone = template.content.cloneNode(true);
 
         clone.querySelector(".drink-name").textContent = drink.name;
-        clone.querySelector(".drink-category").textContent = drink.category_name || "Drink";
+        clone.querySelector(".drink-category").textContent = drink.category;
         clone.querySelector(".drink-price").textContent = `${drink.price} RON`;
+        clone.querySelector(".drink-provider").textContent = drink.provider || "Provider";
 
         container.appendChild(clone);
     }

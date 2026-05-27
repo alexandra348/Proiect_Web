@@ -31,10 +31,6 @@ services:
     restart: always
     env_file:
       - ../.env
-    environment:
-      POSTGRES_DB: softdrinks
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: sergiu
     ports:
       - "5432:5432"
     volumes:

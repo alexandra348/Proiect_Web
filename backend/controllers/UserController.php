@@ -38,46 +38,6 @@ class UserController {
 
 
 
-    public function login($data)
-    {
-        try {
-
-            if(
-                empty($data['email']) ||
-                empty($data['password'])
-            ){
-                throw new Exception(
-                    "Email and password required"
-                );
-            }
-
-
-            $user = $this->service->login(
-                $data['email'],
-                $data['password']
-            );
-
-            http_response_code(200);
-
-            return [
-                "success" => true,
-                "data" => $user
-            ];
-
-        }
-        catch(Exception $e){
-
-            http_response_code(401);
-
-            return [
-                "success"=>false,
-                "error"=>$e->getMessage()
-            ];
-        }
-    }
-
-
-
     public function getAll()
     {
         try {

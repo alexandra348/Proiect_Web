@@ -164,6 +164,11 @@ INSERT INTO users (name, email, password) VALUES
 ('Diana Muresan','diana@test.com','123'),
 ('Cristi Pop','cristi@test.com','123');
 
+ALTER TABLE users
+ADD COLUMN role VARCHAR(20)
+DEFAULT 'user';
+
+
 -- CATEGORIES
 INSERT INTO categories (name) VALUES
 ('Coffee'),('Tea'),('Fresh Juice'),('Smoothie'),('Milkshake');

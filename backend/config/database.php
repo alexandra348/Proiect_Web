@@ -3,9 +3,9 @@
 class Database {
     public function connect() {
         $host = getenv('DB_HOST');
-        $db   = getenv('DB_NAME');
-        $user = getenv('DB_USER');
-        $pass = getenv('DB_PASSWORD');
+        $db   = getenv('POSTGRES_DB');
+        $user = getenv('POSTGRES_USER');
+        $pass = getenv('POSTGRES_PASSWORD');
 
         try {
             $conn = new PDO(

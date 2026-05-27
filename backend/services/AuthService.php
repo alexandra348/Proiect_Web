@@ -2,16 +2,21 @@
 
 require_once __DIR__ . '/../repositories/UserRepository.php';
 require_once __DIR__ . '/../repositories/ProviderRepository.php';
+require_once __DIR__ . '/../utils/JWTUtils.php';
+
+use Utils\JWTUtils;
 
 class AuthService {
 
     private UserRepository $userRepo;
     private ProviderRepository $providerRepo;
+    private JWTUtils $jwtUtils;
 
     public function __construct($db)
     {
         $this->userRepo = new UserRepository($db);
         $this->providerRepo = new ProviderRepository($db);
+        $this->jwtUtils = new JWTUtils();
     }
 
     public function login(array $data): array
@@ -26,10 +31,14 @@ class AuthService {
         if ($user && password_verify($data['password'], $user['password'])) {
             unset($user['password']);
 
+            $token = $this->jwtUtils->generateToken($user);
+
             return [
-                "type" => "user",
-                "data" => $user
-            ];
+                  "data" => [
+                  "token" => $token,
+                  "user" => $user
+            ]
+];
         }
 
         
@@ -38,9 +47,15 @@ class AuthService {
         if ($provider && password_verify($data['password'], $provider['password'])) {
             unset($provider['password']);
 
+            $provider['role'] = 'provider';
+
+            $token = $this->jwtUtils->generateToken($provider);
+
             return [
-                "type" => "provider",
-                "data" => $provider
+                "data" => [
+                    "token" => $token,
+                    "user" => $provider
+                ]
             ];
         }
 
