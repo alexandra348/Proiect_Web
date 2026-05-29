@@ -43,10 +43,14 @@ justify-content:space-between;
 margin-top:16px;
 }
 
+.drink-name {
+    color: var(--mint);
+}
+
 .drink-price{
 font-weight:600;
 margin-top:8px;
-color:var(--green);
+color:var(--blue);
 }
 
 .drink-category{
