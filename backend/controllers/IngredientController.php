@@ -28,6 +28,22 @@ class IngredientController {
         }
     }
 
+    public function getIngredientsByDrink($drinkId)
+    {
+        try {
+            return [
+                "status" => 200,
+                "data" => $this->service->findByDrinkId($drinkId)
+            ];
+        } catch (IngredientException $e) {
+            return [
+                "status" => 500,
+                "error_code" => "FETCH_FAILED",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
     public function getIngredientById($id)
     {
         try {

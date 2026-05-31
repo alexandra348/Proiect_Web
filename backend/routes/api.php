@@ -230,6 +230,11 @@ if($uri=="/api/ingredients" && $method=="GET"){
         );
 }
 
+if($uri=="/api/ingredients/drink" && $method=="GET"){
+
+     sendResponse($ingredientController->getIngredientsByDrink($_GET["id"]));
+}
+
 if($uri=="/api/ingredients" && $method=="POST"){
     sendResponse(
         $ingredientController
