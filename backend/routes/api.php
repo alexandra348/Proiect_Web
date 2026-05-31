@@ -36,7 +36,9 @@ require_once __DIR__ . '/../repositories/PreferenceRepository.php';
 require_once __DIR__ . '/../repositories/StatisticsRepository.php';
 require_once __DIR__ . '/../repositories/RecommendationsRepository.php';
 
-
+require_once __DIR__ . '/../middleware/AuthMiddleware.php';
+require_once __DIR__ . '/../middleware/RoleMiddleware.php';
+require_once __DIR__ . '/../middleware/Authorization.php';
 
 function sendResponse($response){
     http_response_code($response["status"] ?? 200);
@@ -153,12 +155,16 @@ if($uri=="/api/drinks" && $method=="GET"){
 }
 
 if($uri=="/api/drinks" && $method=="POST"){
+
+    Authorization::requireRoles(['admin']);
     sendResponse(
         $drinkController->create($data)
     );
 }
 
 if($uri=="/api/drinks" && $method=="PUT"){
+
+    Authorization::requireRoles(['admin']);
     sendResponse(
         $drinkController->update(
             $_GET["id"],
@@ -168,6 +174,8 @@ if($uri=="/api/drinks" && $method=="PUT"){
 }
 
 if($uri=="/api/drinks" && $method=="DELETE"){
+
+    Authorization::requireRoles(['admin']);
     sendResponse(
         $drinkController->delete(
             $_GET["id"]
@@ -193,6 +201,7 @@ if($uri=="/api/categories" && $method=="GET"){
 }
 
 if($uri=="/api/categories" && $method=="POST"){
+    Authorization::requireRoles(['admin']);
     sendResponse(
         $categoryController
         ->create($data)
@@ -200,6 +209,7 @@ if($uri=="/api/categories" && $method=="POST"){
 }
 
 if($uri=="/api/categories" && $method=="PUT"){
+    Authorization::requireRoles(['admin']);
     sendResponse(
         $categoryController
         ->update($_GET["id"],$data)
@@ -207,6 +217,7 @@ if($uri=="/api/categories" && $method=="PUT"){
 }
 
 if($uri=="/api/categories" && $method=="DELETE"){
+    Authorization::requireRoles(['admin']);
     sendResponse(
         $categoryController
         ->delete($_GET["id"])
@@ -236,6 +247,7 @@ if($uri=="/api/ingredients/drink" && $method=="GET"){
 }
 
 if($uri=="/api/ingredients" && $method=="POST"){
+    Authorization::requireRoles(['admin']);
     sendResponse(
         $ingredientController
         ->create($data)
@@ -243,6 +255,7 @@ if($uri=="/api/ingredients" && $method=="POST"){
 }
 
 if($uri=="/api/ingredients" && $method=="PUT"){
+    Authorization::requireRoles(['admin']);
     sendResponse(
         $ingredientController
         ->update($_GET["id"],$data)
@@ -250,6 +263,7 @@ if($uri=="/api/ingredients" && $method=="PUT"){
 }
 
 if($uri=="/api/ingredients" && $method=="DELETE"){
+    Authorization::requireRoles(['admin']);
     sendResponse(
         $ingredientController
         ->delete($_GET["id"])
@@ -281,6 +295,7 @@ if($uri=="/api/providers" && $method=="POST"){
 }
 
 if($uri=="/api/providers" && $method=="PUT"){
+    Authorization::requireRoles(['admin','provider']);
     sendResponse(
         $providerController
         ->update($_GET["id"],$data)
@@ -288,6 +303,7 @@ if($uri=="/api/providers" && $method=="PUT"){
 }
 
 if($uri=="/api/providers" && $method=="DELETE"){
+    Authorization::requireRoles(['admin','provider']);
     sendResponse(
         $providerController
         ->delete($_GET["id"])
@@ -300,6 +316,7 @@ if($uri=="/api/providers" && $method=="DELETE"){
 
 if($uri=="/api/users" && $method=="GET"){
 
+    Authorization::requireRoles(['admin']);
     isset($_GET["id"])
         ? sendResponse(
             $userController
@@ -319,6 +336,7 @@ if($uri=="/api/users" && $method=="POST"){
 }
 
 if($uri=="/api/users" && $method=="PUT"){
+    Authorization::requireRoles(['admin','user']);
     sendResponse(
         $userController
         ->update($_GET["id"],$data)
@@ -326,6 +344,7 @@ if($uri=="/api/users" && $method=="PUT"){
 }
 
 if($uri=="/api/users" && $method=="DELETE"){
+    Authorization::requireRoles(['admin','user']);
     sendResponse(
         $userController
         ->delete($_GET["id"])
@@ -350,6 +369,7 @@ if($uri=="/api/restrictions" && $method=="GET"){
 }
 
 if($uri=="/api/restrictions" && $method=="POST"){
+    Authorization::requireRoles(['admin']);
     sendResponse(
         $restrictionController
         ->create($data)
@@ -357,6 +377,7 @@ if($uri=="/api/restrictions" && $method=="POST"){
 }
 
 if($uri=="/api/restrictions" && $method=="PUT"){
+    Authorization::requireRoles(['admin']);
     sendResponse(
         $restrictionController
         ->update($_GET["id"],$data)
@@ -364,6 +385,7 @@ if($uri=="/api/restrictions" && $method=="PUT"){
 }
 
 if($uri=="/api/restrictions" && $method=="DELETE"){
+    Authorization::requireRoles(['admin']);
     sendResponse(
         $restrictionController
         ->delete($_GET["id"])
@@ -374,68 +396,204 @@ if($uri=="/api/restrictions" && $method=="DELETE"){
 
 /* PREFERENCES */
 
-if($uri=="/api/preferences/wishlist" && $method=="GET")
-    sendResponse($preferenceController->getWishlist($_GET["user_id"]));
+if($uri=="/api/preferences/wishlist" && $method=="GET"){
+    $user = Authorization::requireRoles(
+        ['user', 'provider', 'admin']
+    );
 
-if($uri=="/api/preferences/wishlist" && $method=="POST")
-    sendResponse($preferenceController->addWishlist($data));
+    sendResponse(
+        $preferenceController->getWishlist(
+            $user->user_id
+        )
+    );
+}
 
-if($uri=="/api/preferences/tried" && $method=="GET")
-    sendResponse($preferenceController->getTriedList($_GET["user_id"]));
+if($uri=="/api/preferences/wishlist" && $method=="POST"){
+    $user = Authorization::requireRoles(
+        ['user', 'provider', 'admin']
+    );
 
-if($uri=="/api/preferences/tried" && $method=="POST")
-    sendResponse($preferenceController->addTried($data));
+    $data['user_id'] = $user->user_id;
 
-if($uri=="/api/preferences/categories" && $method=="GET")
-    sendResponse($preferenceController->getFavoriteCategories($_GET["user_id"]));
+    sendResponse(
+        $preferenceController->addWishlist($data)
+    );
+}
 
-if($uri=="/api/preferences/categories" && $method=="POST")
-    sendResponse($preferenceController->addFavoriteCategory($data));
+if($uri=="/api/preferences/tried" && $method=="GET"){
+    $user = Authorization::requireRoles(
+        ['user', 'provider', 'admin']
+    );
 
-if($uri=="/api/preferences/favorite-ingredients" && $method=="GET")
-    sendResponse($preferenceController->getFavoriteIngredients($_GET["user_id"]));
+    sendResponse(
+        $preferenceController->getTriedList(
+            $user->user_id
+        )
+    );
+}
 
-if($uri=="/api/preferences/favorite-ingredients" && $method=="POST")
-    sendResponse($preferenceController->addFavoriteIngredient($data));
+if($uri=="/api/preferences/tried" && $method=="POST"){
+    $user = Authorization::requireRoles(
+        ['user', 'provider', 'admin']
+    );
 
-if($uri=="/api/preferences/avoided-ingredients" && $method=="GET")
-    sendResponse($preferenceController->getAvoidedIngredients($_GET["user_id"]));
+    $data['user_id'] = $user->user_id;
 
-if($uri=="/api/preferences/avoided-ingredients" && $method=="POST")
-    sendResponse($preferenceController->addAvoidedIngredient($data));
+    sendResponse(
+        $preferenceController->addTried($data)
+    );
+}
 
-if($uri=="/api/preferences/restrictions" && $method=="GET")
-    sendResponse($preferenceController->getUserRestrictions($_GET["user_id"]));
+if($uri=="/api/preferences/categories" && $method=="GET"){
+    $user = Authorization::requireRoles(
+        ['user', 'provider', 'admin']
+    );
 
-if($uri=="/api/preferences/restrictions" && $method=="POST")
-    sendResponse($preferenceController->addRestriction($data));
+    sendResponse(
+        $preferenceController->getFavoriteCategories(
+            $user->user_id
+        )
+    );
+}
 
-if($uri=="/api/preferences/providers" && $method=="GET")
-    sendResponse($preferenceController->getFavoriteProviders($_GET["user_id"]));
+if($uri=="/api/preferences/categories" && $method=="POST"){
+    $user = Authorization::requireRoles(
+        ['user', 'provider', 'admin']
+    );
 
-if($uri=="/api/preferences/providers" && $method=="POST")
-    sendResponse($preferenceController->addFavoriteProvider($data));
+    $data['user_id'] = $user->user_id;
 
+    sendResponse(
+        $preferenceController->addFavoriteCategory($data)
+    );
+}
 
+if($uri=="/api/preferences/favorite-ingredients" && $method=="GET"){
+    $user = Authorization::requireRoles(
+        ['user', 'provider', 'admin']
+    );
+
+    sendResponse(
+        $preferenceController->getFavoriteIngredients(
+            $user->user_id
+        )
+    );
+}
+
+if($uri=="/api/preferences/favorite-ingredients" && $method=="POST"){
+    $user = Authorization::requireRoles(
+        ['user', 'provider', 'admin']
+    );
+
+    $data['user_id'] = $user->user_id;
+
+    sendResponse(
+        $preferenceController->addFavoriteIngredient($data)
+    );
+}
+
+if($uri=="/api/preferences/avoided-ingredients" && $method=="GET"){
+    $user = Authorization::requireRoles(
+        ['user', 'provider', 'admin']
+    );
+
+    sendResponse(
+        $preferenceController->getAvoidedIngredients(
+            $user->user_id
+        )
+    );
+}
+
+if($uri=="/api/preferences/avoided-ingredients" && $method=="POST"){
+    $user = Authorization::requireRoles(
+        ['user', 'provider', 'admin']
+    );
+
+    $data['user_id'] = $user->user_id;
+
+    sendResponse(
+        $preferenceController->addAvoidedIngredient($data)
+    );
+}
+
+if($uri=="/api/preferences/restrictions" && $method=="GET"){
+    $user = Authorization::requireRoles(
+        ['user', 'provider', 'admin']
+    );
+
+    sendResponse(
+        $preferenceController->getUserRestrictions(
+            $user->user_id
+        )
+    );
+}
+
+if($uri=="/api/preferences/restrictions" && $method=="POST"){
+    $user = Authorization::requireRoles(
+        ['user', 'provider', 'admin']
+    );
+
+    $data['user_id'] = $user->user_id;
+
+    sendResponse(
+        $preferenceController->addRestriction($data)
+    );
+}
+
+if($uri=="/api/preferences/providers" && $method=="GET"){
+    $user = Authorization::requireRoles(
+        ['user', 'provider', 'admin']
+    );
+
+    sendResponse(
+        $preferenceController->getFavoriteProviders(
+            $user->user_id
+        )
+    );
+}
+
+if($uri=="/api/preferences/providers" && $method=="POST"){
+    $user = Authorization::requireRoles(
+        ['user', 'provider', 'admin']
+    );
+
+    $data['user_id'] = $user->user_id;
+
+    sendResponse(
+        $preferenceController->addFavoriteProvider($data)
+    );
+}
 
 /* STATISTICS */
 
-if($uri=="/api/statistics" && $method=="GET")
-    sendResponse(
-        $statisticsController->dashboard()
-    );
+if($uri=="/api/statistics" && $method=="GET") {
+
+        Authorization::requireRoles(
+            ['admin']
+        );
+
+        sendResponse(
+            $statisticsController->dashboard()
+        );
+
+}
 
 
 /* RECOMMENDATIONS */
 
-if($uri=="/api/recommendations" && $method=="GET")
+if($uri=="/api/recommendations" && $method=="GET") {
+
+    $user = Authorization::requireRoles(
+        ['user', 'provider', 'admin']
+    );
+
     sendResponse(
         $recommendationsController
         ->getRecommendations(
-            $_GET["user_id"]
+            $user->user_id
         )
     );
-
+}
 
 http_response_code(404);
 
