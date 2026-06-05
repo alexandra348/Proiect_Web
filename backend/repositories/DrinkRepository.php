@@ -30,24 +30,47 @@ class DrinkRepository {
     }
 
     public function create($data) {
-        $query = "INSERT INTO drinks (name, price, provider_id, category_id)
-                  VALUES (:name, :price, :provider_id, :category_id)";
+        $query = "INSERT INTO drinks (name, price, provider_id, category_id, image_url)
+                  VALUES (:name, :price, :provider_id, :category_id, :image_url)";
 
         $stmt = $this->conn->prepare($query);
 
         return $stmt->execute($data);
     }
 
-    public function update($id, $data) {
-        $stmt = $this->conn->prepare("
-            UPDATE drinks SET name=:name, price=:price WHERE id=:id
-        ");
+    public function update(int $id, array $data): bool
+    {
+        $fields = [];
+        $params = [':id' => $id];
 
-        return $stmt->execute([
-            ":name" => $data['name'],
-            ":price" => $data['price'],
-            ":id" => $id
-        ]);
+        if (isset($data['name'])) {
+            $fields[] = 'name = :name';
+            $params[':name'] = $data['name'];
+        }
+
+        if (isset($data['price'])) {
+            $fields[] = 'price = :price';
+            $params[':price'] = $data['price'];
+        }
+
+        if (isset($data['image_url'])) {
+            $fields[] = 'image_url = :image_url';
+            $params[':image_url'] = $data['image_url'];
+        }
+
+        if (empty($fields)) {
+            return false;
+        }
+
+        $sql = "
+            UPDATE drinks
+            SET " . implode(', ', $fields) . "
+            WHERE id = :id
+        ";
+
+        $stmt = $this->conn->prepare($sql);
+
+        return $stmt->execute($params);
     }
 
     public function delete($id) {

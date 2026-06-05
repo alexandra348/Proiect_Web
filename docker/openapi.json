@@ -308,7 +308,7 @@
         "responses":{"201":{"description":"Created"}}
       },
 
-      "put":{
+      "patch":{
         "tags":["Drinks"],
         "parameters":[
           {
