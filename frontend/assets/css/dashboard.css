@@ -59,3 +59,20 @@ padding:12px;
 border-radius:8px;
 width:300px;
 }
+
+
+html, body {
+height: 100%;
+overflow: hidden;
+margin: 0;
+}
+
+.main-layout {
+height: 100vh;
+overflow: hidden;
+}
+
+.content {
+height: 100vh;
+overflow-y: auto;
+}
