@@ -44,13 +44,13 @@ margin-top:16px;
 }
 
 .drink-name {
-    color: var(--mint);
+color: var(--text);
 }
 
 .drink-price{
 font-weight:600;
 margin-top:8px;
-color:var(--blue);
+color:var(--mint);
 }
 
 .drink-category{
@@ -62,3 +62,11 @@ color:var(--text2);
 margin-top:6px;
 color:var(--text2);
 }
+
+.drink-card {
+flex: 0 0 auto;
+width: 260px;
+}
+
+
+
