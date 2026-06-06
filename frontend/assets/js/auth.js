@@ -7,7 +7,9 @@ import { login, registerUser } from "./api.js";
 const loginForm = document.querySelector("#login-form");
 
 if (loginForm) {
+
     loginForm.addEventListener("submit", async (e) => {
+
         e.preventDefault();
 
         const email = document.querySelector("#email").value;
@@ -15,20 +17,43 @@ if (loginForm) {
 
         const response = await login(email, password);
 
-        console.log("LOGIN RESPONSE:", response);
+        if (response.status === 200 && response.data.token) {
 
-        // verificare corectă
-        if (response.status === 200 && response.token) {
+            localStorage.setItem(
+                "token",
+                response.data.token
+            );
 
-            localStorage.setItem("token", response.token);
+            localStorage.setItem(
+                "user",
+                JSON.stringify(response.data.user)
+            );
 
-            alert("Login successful");
+            const role = response.data.user.role;
 
-            window.location.href = "/pages/index.html"; // sau dashboard.html, DAR alege unul
+            if (role === "admin") {
+
+                window.location.href =
+                    "/pages/index.html";
+
+            } else if (role === "provider") {
+
+                window.location.href =
+                    "/pages/provider_dashboard.html";
+
+            } else {
+
+                window.location.href =
+                    "/pages/index.html";
+            }
+
         } else {
+
             alert(response.error || response.message || "Login failed");
         }
+
     });
+
 }
 
 // ========================

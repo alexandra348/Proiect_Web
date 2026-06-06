@@ -8,35 +8,32 @@ console.log("API.JS LOADED");
 // CORE REQUEST FUNCTION
 // ========================
 
-/*async function request(endpoint, options = {}) {
-    const response = await fetch(API_BASE + endpoint, options);
-
-    const text = await response.text();
-    console.log("RAW TEXT:", text);
-
-    const data = JSON.parse(text);
-
-    return {
-        status: response.status,
-        success: response.ok,
-        data: data.data ?? data,
-        error: data.error
-    };
-}*/
-
 async function request(endpoint, options = {}) {
-    const response = await fetch(API_BASE + endpoint, options);
+
+    const token = localStorage.getItem("token");
+
+    options.headers = {
+        ...(options.headers || {}),
+        "Content-Type": "application/json"
+    };
+
+    if (token) {
+        options.headers.Authorization =
+            `Bearer ${token}`;
+    }
+
+    const response = await fetch(
+        API_BASE + endpoint,
+        options
+    );
 
     const text = await response.text();
-    console.log("RAW TEXT:", text);
 
     let data;
 
     try {
         data = JSON.parse(text);
     } catch (e) {
-        console.error("Invalid JSON from backend:", text);
-
         return {
             status: response.status,
             success: false,
@@ -53,42 +50,7 @@ async function request(endpoint, options = {}) {
     };
 }
 
-/*async function request(endpoint, options = {}) {
-    const token = localStorage.getItem("token");
 
-    const config = {
-        headers: {
-            "Content-Type": "application/json",
-            ...(token && { Authorization: `Bearer ${token}` })
-        },
-        ...options
-    };
-
-    const response = await fetch(API_BASE + endpoint, config);
-
-    let data;
-    try {
-        data = await response.json();
-    } catch (e) {
-        return {
-            status: response.status,
-            success: false,
-            data: null,
-            error: "Invalid JSON"
-        };
-    }
-
-    console.log("FETCH:", API_BASE + endpoint);
-    console.log("RAW RESPONSE:", response);
-
-    return {
-        status: response.status,
-        success: response.ok,
-        data: data.data ?? data,   // 🔥 FIX IMPORTANT
-        message: data.message,
-        error: data.error_code || data.error
-    };
-}*/
 // ========================
 // DRINKS
 // ========================
@@ -197,7 +159,7 @@ export async function login(email, password) {
     });
 
     if (data.token) {
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("token", data.data.token);
     }
 
     return data;

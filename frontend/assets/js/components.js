@@ -1,44 +1,28 @@
-export async function loadComponent(
-id,
-path
-){
+import { initLoginButton } from "./navbar.js";
 
-const container=
-document.getElementById(id);
+export async function loadComponent(id, path) {
 
-if(!container) return;
+    const container = document.getElementById(id);
 
-try{
+    if(!container) return;
 
-const response=
-await fetch(path);
+    try{
+        const response = await fetch(path);
+        container.innerHTML = await response.text();
 
-container.innerHTML=
-await response.text();
+    }catch(err){
 
-}catch(err){
+        console.error(err);
 
-console.error(err);
-
-}
+    }
 
 }
 
 export async function initLayout(){
 
-await loadComponent(
-"navbar",
-"/components/navbar.html"
-);
-
-await loadComponent(
-"footer",
-"/components/footer.html"
-);
-
-await loadComponent(
-"drink-template",
-"/components/drink-card.html"
-);
+    await loadComponent("navbar","/components/navbar.html");
+    initLoginButton();
+    await loadComponent("footer","/components/footer.html");
+    await loadComponent("drink-template","/components/drink-card.html");
 
 }
