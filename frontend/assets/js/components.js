@@ -20,6 +20,7 @@ export async function loadComponent(id, path) {
 
 export async function initLayout(){
 
+    await loadComponent("sidebar","/components/sidebar.html");
     await loadComponent("navbar","/components/navbar.html");
     initLoginButton();
     await loadComponent("footer","/components/footer.html");

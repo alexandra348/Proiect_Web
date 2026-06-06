@@ -18,8 +18,7 @@ export function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
 
-    window.location.href =
-        "/pages/login.html";
+    window.location.replace("/pages/index.html");
 }
 
 export function initLoginButton() {
@@ -34,13 +33,14 @@ export function initLoginButton() {
 
         container.innerHTML = `
             <span>Hello, ${user.name}</span>
-            <button id="logout-btn">Logout</button>
+            <button id="logout-btn" class="btn btn-primary">Logout</button>
         `;
 
         document.querySelector("#logout-btn").addEventListener("click", logout);
 
     } else {
 
-        container.innerHTML = `<a href="/pages/login.html">Login</a>`;
+        container.innerHTML = `<a href="/pages/login.html" class="btn btn-primary">Login</a>
+                               <a href="/pages/register.html" class="btn btn-primary">Register</a>`;
     }
 }

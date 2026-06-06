@@ -467,7 +467,7 @@ if($uri=="/api/preferences/providers" && $method=="POST"){
 
 if($uri=="/api/statistics" && $method=="GET") {
 
-        Authorization::requireRoles(['admin']);
+        Authorization::requireRoles(['admin','provider','user']);
         sendResponse($statisticsController->dashboard());
 
 }

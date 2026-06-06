@@ -1,4 +1,4 @@
-import { login, registerUser } from "./api.js";
+import { login } from "./api.js";
 
 // ========================
 // LOGIN
@@ -33,8 +33,7 @@ if (loginForm) {
 
             if (role === "admin") {
 
-                window.location.href =
-                    "/pages/index.html";
+                window.location.replace("/pages/index.html");
 
             } else if (role === "provider") {
 
@@ -54,31 +53,4 @@ if (loginForm) {
 
     });
 
-}
-
-// ========================
-// REGISTER
-// ========================
-
-const registerForm = document.querySelector("#register-form");
-
-if (registerForm) {
-    registerForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const data = {
-            name: document.querySelector("#name").value,
-            email: document.querySelector("#email").value,
-            password: document.querySelector("#password").value
-        };
-
-        const response = await registerUser(data);
-
-        if (response.status === 201 || response.success) {
-            alert("Account created");
-            window.location.href = "/pages/login.html";
-        } else {
-            alert(response.error || response.message || "Register failed");
-        }
-    });
 }

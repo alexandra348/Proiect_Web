@@ -7,8 +7,10 @@ font-weight: 600;
 }
 
 .btn-primary{
+margin-top: 10px;
 background:var(--green);
 color:white;
+border:2px solid var(--text);
 }
 
 .btn-primary:hover{
@@ -66,3 +68,19 @@ box-shadow: 0 8px 20px rgba(63, 191, 127, 0.35);
     flex-wrap: wrap;
 }
 
+
+.login-btn{
+    margin-top:auto;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+
+    width:100%;
+}
+
+.login-btn .btn{
+    width:80%;
+    text-align:center;
+}

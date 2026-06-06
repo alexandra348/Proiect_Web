@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/auth.css">
+    <link rel="stylesheet" href="../assets/css/buttons.css">
+</head>
+<body>
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <h1>Create Account</h1>
+
+        <p class="auth-subtitle">
+            Join Soft Drink Organizer
+        </p>
+
+        <div class="register-tabs">
+
+            <button
+                class="tab-btn active"
+                id="user-tab"
+                type="button">
+                User
+            </button>
+
+            <button
+                class="tab-btn"
+                id="provider-tab"
+                type="button">
+                Provider
+            </button>
+
+        </div>
+
+        <form id="register-form" class="auth-form">
+
+            <input
+                type="text"
+                id="name"
+                placeholder="Full Name"
+                required
+            >
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Email"
+                required
+            >
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                required
+            >
+
+            <div id="provider-fields" class="hidden auth-form">
+
+                <input
+                    type="text"
+                    id="type"
+                    placeholder="Provider Type"
+                >
+
+                <input
+                    type="text"
+                    id="address"
+                    placeholder="Address"
+                >
+
+                <input
+                    type="text"
+                    id="city"
+                    placeholder="City"
+                >
+
+            </div>
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+                Register
+            </button>
+
+        </form>
+
+        <div class="auth-footer">
+            <span>Already have an account?</span>
+            <a href="./login.html">Login</a>
+        </div>
+
+    </div>
+
+</div>
+
+<script type="module" src="../assets/js/register.js"></script>
+
+</body>
+</html>
