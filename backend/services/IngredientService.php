@@ -41,6 +41,21 @@ class IngredientService {
         }
     }
 
+    public function findByDrinkId($drinkId): array
+    {
+        if (!is_numeric($drinkId) || $drinkId <= 0) {
+            throw new IngredientException("Invalid drink ID");
+        }
+
+        try {
+
+            return $this->repository->getIngredientsByDrink((int)$drinkId);
+
+        } catch (PDOException $e) {
+            throw new IngredientException("Failed to fetch ingredients", 0, $e);
+        }
+    }
+
     public function create(array $data): bool
     {
         if (empty($data['name'])) {

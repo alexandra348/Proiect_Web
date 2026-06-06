@@ -308,7 +308,7 @@
         "responses":{"201":{"description":"Created"}}
       },
 
-      "put":{
+      "patch":{
         "tags":["Drinks"],
         "parameters":[
           {
@@ -451,6 +451,19 @@
       }
     ],
     "responses":{"200":{"description":"Deleted"}}
+  }
+},
+
+"/ingredients/drink":{
+  "get":{
+    "tags":["Ingredients"],
+    "summary":"Get all ingredients by drink_id",
+    "parameters":[
+      {
+        "$ref":"#/components/parameters/IdQuery"
+      }
+    ],
+    "responses":{"200":{"description":"OK"}}
   }
 },
 

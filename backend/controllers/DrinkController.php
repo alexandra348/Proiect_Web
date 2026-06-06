@@ -93,10 +93,10 @@ class DrinkController {
         }
     }
 
-    public function delete($id)
+    public function delete($id, $user)
     {
         try {
-            $this->service->delete($id);
+            $this->service->delete($id, $user);
 
             return [
                 "status" => 200,

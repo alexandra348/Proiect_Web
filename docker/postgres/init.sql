@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS user_favorite_categories CASCADE;
 DROP TABLE IF EXISTS wishlist CASCADE;
 DROP TABLE IF EXISTS tried_drinks CASCADE;
 DROP TABLE IF EXISTS drink_ingredients CASCADE;
+DROP TABLE IF EXISTS drink_images CASCADE;
 
 DROP TABLE IF EXISTS drinks CASCADE;
 DROP TABLE IF EXISTS ingredients CASCADE;
@@ -55,6 +56,7 @@ CREATE TABLE drinks (
     price NUMERIC(10,2),
     provider_id INT REFERENCES providers(id) ON DELETE CASCADE,
     category_id INT REFERENCES categories(id),
+    image_url TEXT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

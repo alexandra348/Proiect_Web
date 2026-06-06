@@ -13,6 +13,13 @@ class IngredientRepository {
             ->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getIngredientsByDrink($drinkId) {
+        $stmt = $this->conn->prepare("SELECT i.id, i.name FROM ingredients i JOIN drink_ingredients di 
+                                      ON i.id = di.ingredient_id WHERE di.drink_id=:drinkId");
+        $stmt->execute([":drinkId"=>$drinkId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
    
     public function findById($id) {
         $stmt = $this->conn->prepare("SELECT * FROM ingredients WHERE id=:id");
