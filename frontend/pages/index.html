@@ -10,8 +10,11 @@ content="width=device-width,initial-scale=1">
 
 <link rel="stylesheet" href="/assets/css/styles.css">
 <link rel="stylesheet" href="/assets/css/dashboard.css">
+<link rel="stylesheet" href="/assets/css/buttons.css">
 <link rel="stylesheet" href="/assets/css/cards.css">
+<link rel="stylesheet" href="/assets/css/categories.css">
 <link rel="stylesheet" href="/assets/css/forms.css">
+<link rel="stylesheet" href="/assets/css/navbar.css">
 <link rel="stylesheet" href="/assets/css/responsive.css">
 
 </head>
@@ -62,11 +65,23 @@ Discover Drinks
 Browse and manage products
 </p>
 
+<div class="filters">
+
+    <button id="btn-categories" class="tab-btn">
+        Categories
+    </button>
+
+    <button id="btn-providers" class="tab-btn">
+        Providers
+    </button>
+
+</div>
+
 </section>
 
 <br>
 
-<div id="drinks-container" class="grid"></div>
+<div id="drinks-container" ></div>
 
 <template id="drink-card-template">
     <div class="drink-card">
