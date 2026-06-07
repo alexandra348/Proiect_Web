@@ -81,10 +81,23 @@ class ProviderService {
         $this->validateUpdate($data);
 
         try {
-            $exists = $this->repository->findById((int)$id);
+            $provider = $this->repository->findById((int)$id);
 
-            if (!$exists) {
+            if (!$provider) {
                 throw new ProviderException("Provider not found");
+            }
+
+            if(!empty($data['currentPassword']) && !empty($data['password'])) {
+
+                if (!password_verify($data['currentPassword'], $provider['password'])) {
+                    throw new Exception("Current password incorrect");
+                }
+
+                $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+            }
+            
+            if(!empty($data['password']) && empty($data['currentPassword'])){
+                throw new Exception("Current password required");
             }
 
             return $this->repository->update((int)$id, $data);
@@ -147,6 +160,10 @@ class ProviderService {
     {
         if (empty($data['name'])) {
             throw new ProviderException("Name is required");
+        }
+
+        if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            throw new ProviderException("Valid email is required");
         }
 
         if (empty($data['type'])) {

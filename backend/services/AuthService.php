@@ -37,8 +37,8 @@ class AuthService {
                   "data" => [
                   "token" => $token,
                   "user" => $user
-            ]
-];
+                ]
+            ];
         }
 
         

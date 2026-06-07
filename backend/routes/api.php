@@ -286,7 +286,7 @@ if($uri=="/api/users" && $method=="POST"){
 if($uri=="/api/users" && $method=="PUT"){
     $user = Authorization::requireRoles(['admin','user']);
 
-    if($user->role = 'user') {
+    if($user->role === 'user') {
         sendResponse($userController->update($user->user_id,$data));
     }
     else {
@@ -298,7 +298,7 @@ if($uri=="/api/users" && $method=="PUT"){
 if($uri=="/api/users" && $method=="DELETE"){
     $user = Authorization::requireRoles(['admin','user']);
 
-    if($user->role = 'user') {
+    if($user->role === 'user') {
         sendResponse($userController->delete($user->user_id));
     }
     else {

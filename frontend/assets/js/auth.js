@@ -29,22 +29,8 @@ if (loginForm) {
                 JSON.stringify(response.data.user)
             );
 
-            const role = response.data.user.role;
 
-            if (role === "admin") {
-
-                window.location.replace("/pages/index.html");
-
-            } else if (role === "provider") {
-
-                window.location.href =
-                    "/pages/provider_dashboard.html";
-
-            } else {
-
-                window.location.href =
-                    "/pages/index.html";
-            }
+            window.location.replace("/pages/index.html");
 
         } else {
 

@@ -42,10 +42,7 @@ class UserController {
     {
         try {
 
-            $users=
-            $this->service
-                 ->getAll();
-
+            $users = $this->service->getAll();
             http_response_code(200);
 
             return [
@@ -72,10 +69,7 @@ class UserController {
 
         try {
 
-            $user=
-            $this->service
-                 ->findById($id);
-
+            $user = $this->service->findById($id);
             http_response_code(200);
 
             return [
@@ -98,77 +92,19 @@ class UserController {
 
 
 
-    public function update(
-        $id,
-        $data
-    )
+    public function update($id, $data)
     {
 
         try{
 
-            $this->service
-                 ->update(
-                    $id,
-                    $data
-                 );
+            $this->service->update($id, $data);
 
             http_response_code(200);
 
             return [
                 "success"=>true,
-                "message"=>"User updated"
-            ];
-
-        }
-        catch(Exception $e){
-
-            http_response_code(400);
-
-            return [
-                "success"=>false,
-                "error"=>$e->getMessage()
-            ];
-        }
-
-    }
-
-
-    public function changePassword(
-        $id,
-        $data
-    )
-    {
-
-        try{
-
-            if(
-                empty(
-                    $data['oldPassword']
-                )
-                ||
-                empty(
-                    $data['newPassword']
-                )
-            ){
-                throw new Exception(
-                    "Passwords required"
-                );
-            }
-
-
-            $this->service
-                 ->changePassword(
-                    $id,
-                    $data['oldPassword'],
-                    $data['newPassword']
-                 );
-
-
-            http_response_code(200);
-
-            return [
-                "success"=>true,
-                "message"=>"Password updated"
+                "message"=>"User updated",
+                "passwordChanged"=>!empty($data['password'])
             ];
 
         }

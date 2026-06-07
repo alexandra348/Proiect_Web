@@ -17,6 +17,10 @@ border:2px solid var(--text);
 background:var(--green-hover);
 }
 
+.btn-danger:hover{
+background:var(--error-hover);
+}
+
 .btn-secondary{
 background:transparent;
 border:1px solid var(--green);

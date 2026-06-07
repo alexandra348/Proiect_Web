@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+
+    <link rel="stylesheet" href="/assets/css/profile.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <link rel="stylesheet" href="/assets/css/buttons.css">
+    <link rel="stylesheet" href="/assets/css/cards.css">
+    <link rel="stylesheet" href="/assets/css/categories.css">
+    <link rel="stylesheet" href="/assets/css/forms.css">
+    <link rel="stylesheet" href="/assets/css/navbar.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+</head>
+
+<body style="visibility:hidden;">
+
+<div class="main-layout">
+
+<div id="sidebar"></div>
+
+<div class="content">
+
+<h1 style="text-align: center;">Profile</h1>
+
+<div class="profile-card">
+
+    <div id="profile-view">
+
+        <div class="profile-row">
+            <span class="label">Name</span>
+            <span id="view-name"></span>
+        </div>
+
+        <div class="profile-row">
+            <span class="label">Email</span>
+            <span id="view-email"></span>
+        </div>
+
+        <div id="provider-info" class="hidden">
+
+            <div class="profile-row">
+                <span class="label">Type</span>
+                <span id="view-type"></span>
+            </div>
+
+            <div class="profile-row">
+                <span class="label">Address</span>
+                <span id="view-address"></span>
+            </div>
+
+            <div class="profile-row">
+                <span class="label">City</span>
+                <span id="view-city"></span>
+            </div>
+
+        </div>
+
+        <div class="profile-row">
+            <span class="label">Role</span>
+            <span id="view-role"></span>
+        </div>
+
+        <div class="profile-row">
+            <span class="label">Created At</span>
+            <span id="view-created"></span>
+        </div>
+
+        <button
+            id="edit-btn"
+            class="btn btn-primary">
+            Edit Profile
+        </button>
+
+
+        <button
+            id="delete-btn"
+            class="btn btn-danger hidden">
+            Delete Profile
+        </button>
+
+    </div>
+
+    <form
+        id="profile-form"
+        class="hidden">
+
+        <label>Name</label>
+        <input
+            type="text"
+            id="name"
+        >
+
+        <label>Email</label>
+        <input
+            type="email"
+            id="email"
+        >
+
+        <div id="provider-fields" class="hidden">
+
+            <label>Type</label>
+            <input
+                type="text"
+                id="type"
+            >
+
+            <label>Address</label>
+            <input
+                type="text"
+                id="address"
+            >
+
+            <label>City</label>
+            <input
+                type="text"
+                id="city"
+            >
+
+        </div>
+
+        <label>Current Password</label>
+        <input
+            type="password"
+            id="currentPassword"
+            placeholder="Leave empty to keep current password"
+        >
+
+        <label>New Password</label>
+        <input
+            type="password"
+            id="password"
+            placeholder="Leave empty to keep current password"
+        >
+
+        <div class="actions">
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+                Save
+            </button>
+
+            <button
+                type="button"
+                id="cancel-btn"
+                class="btn btn-primary">
+                Cancel
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+<div id="footer"></div>
+
+</div>
+</div>
+
+<script type="module" src="../assets/js/route-guard.js"></script>
+<script type="module" src="../assets/js/app.js"></script>
+<script type="module" src="../assets/js/profile.js"></script>
+
+</body>
+</html>

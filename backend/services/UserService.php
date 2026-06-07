@@ -15,57 +15,29 @@ class UserService {
     
     public function create($data)
     {
-        if(
-            empty($data['name']) ||
-            empty($data['email']) ||
-            empty($data['password'])
-        ){
-            throw new Exception(
-                "Name, email and password are required"
-            );
+        if(empty($data['name']) || empty($data['email']) || empty($data['password'])){
+            throw new Exception("Name, email and password are required");
         }
 
 
-        if(
-            !filter_var(
-                $data['email'],
-                FILTER_VALIDATE_EMAIL
-            )
-        ){
-            throw new Exception(
-                "Invalid email format"
-            );
+        if(!filter_var($data['email'], FILTER_VALIDATE_EMAIL)){
+            throw new Exception("Invalid email format");
         }
 
 
-        if(
-            $this->repository
-                 ->findByEmail(
-                     $data['email']
-                 )
-        ){
-            throw new Exception(
-                "Email already exists"
-            );
+        if($this->repository->findByEmail($data['email'])){
+            throw new Exception("Email already exists");
         }
 
-
-        $data['password']=password_hash(
-            $data['password'],
-            PASSWORD_BCRYPT
-        );
-
-
-        return $this->repository
-                    ->create($data);
+        $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+        return $this->repository->create($data);
     }
 
 
     
     public function getAll()
     {
-        return $this->repository
-                    ->getAll();
+        return $this->repository->getAll();
     }
 
 
@@ -78,14 +50,10 @@ class UserService {
             );
         }
 
-        $user=
-        $this->repository
-             ->findById($id);
+        $user=$this->repository->findById($id);
 
         if(!$user){
-            throw new Exception(
-                "User not found"
-            );
+            throw new Exception("User not found");
         }
 
         unset($user['password']);
@@ -95,96 +63,38 @@ class UserService {
 
 
     
-    public function update(
-        $id,
-        $data
-    )
+    public function update($id, $data)
     {
 
-        if(
-            !$this->repository
-                   ->exists($id)
-        ){
-            throw new Exception(
-                "User not found"
-            );
-        }
-
-
-        if(
-            empty($data['name']) ||
-            empty($data['email'])
-        ){
-            throw new Exception(
-                "Name and email required"
-            );
-        }
-
-
-        if(
-            !filter_var(
-                $data['email'],
-                FILTER_VALIDATE_EMAIL
-            )
-        ){
-            throw new Exception(
-                "Invalid email"
-            );
-        }
-
-
-        return $this->repository
-                    ->update(
-                        $id,
-                        $data
-                    );
-    }
-
-
-    
-    public function changePassword(
-        $id,
-        $oldPassword,
-        $newPassword
-    )
-    {
-
-        $user=
-        $this->repository
-             ->findById($id);
-
-
+        $user = $this->repository->findById($id);
         if(!$user){
-            throw new Exception(
-                "User not found"
-            );
+            throw new Exception("User not found");
         }
 
-
-        if(
-            !password_verify(
-                $oldPassword,
-                $user['password']
-            )
-        ){
-            throw new Exception(
-                "Old password incorrect"
-            );
+        if(empty($data['name']) || empty($data['email'])){
+            throw new Exception("Name and email required");
         }
 
+        if(!filter_var($data['email'],FILTER_VALIDATE_EMAIL)){
+            throw new Exception("Invalid email");
+        }
 
-        $hashed=
-        password_hash(
-            $newPassword,
-            PASSWORD_BCRYPT
-        );
+        if(!empty($data['currentPassword']) && !empty($data['password'])) {
 
+            if (!password_verify($data['currentPassword'], $user['password'])) {
+                throw new Exception("Current password incorrect");
+            }
 
-        return $this->repository
-                    ->updatePassword(
-                        $id,
-                        $hashed
-                    );
+            $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+        }
+        
+        if(!empty($data['password']) && empty($data['currentPassword'])){
+            throw new Exception("Current password required");
+        }
+
+        
+
+        return $this->repository->update($id,$data);
     }
 
 

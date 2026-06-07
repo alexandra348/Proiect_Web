@@ -121,6 +121,19 @@ export async function createProvider(data) {
     });
 }
 
+export async function updateProvider(data) {
+    return request("/providers", {
+        method: "PUT",
+        body: JSON.stringify(data)
+    });
+}
+
+export async function deleteProvider() {
+    return request("/providers", {
+        method: "DELETE"
+    });
+}
+
 // ========================
 // USERS
 // ========================
@@ -142,10 +155,9 @@ export async function updateUser(data) {
     });
 }
 
-export async function deleteUser(id) {
+export async function deleteUser() {
     return request("/users", {
-        method: "DELETE",
-        body: JSON.stringify({ id })
+        method: "DELETE"
     });
 }
 

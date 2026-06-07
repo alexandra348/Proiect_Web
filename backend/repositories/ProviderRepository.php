@@ -45,22 +45,50 @@ class ProviderRepository {
     }
   
     public function update($id, $data) {
-    $stmt = $this->conn->prepare("
-        UPDATE providers 
-        SET name = :name,
-            type = :type,
-            address = :address,
-            city = :city
-        WHERE id = :id
-    ");
 
-    return $stmt->execute([
-        ":name" => $data['name'],
-        ":type" => $data['type'],
-        ":address" => $data['address'],
-        ":city" => $data['city'],
-        ":id" => $id
-    ]);
+        if(empty($data['password'])) {
+             $stmt = $this->conn->prepare("
+                UPDATE providers 
+                SET name = :name,
+                    email = :email,
+                    type = :type,
+                    address = :address,
+                    city = :city
+                WHERE id = :id
+            ");
+
+            return $stmt->execute([
+                ":name" => $data['name'],
+                ":email" => $data['email'],
+                ":type" => $data['type'],
+                ":address" => $data['address'],
+                ":city" => $data['city'],
+                ":id" => $id
+            ]);
+        }
+        else {
+            $stmt = $this->conn->prepare("
+                UPDATE providers 
+                SET name = :name,
+                    email = :email,
+                    password = :password,
+                    type = :type,
+                    address = :address,
+                    city = :city
+                WHERE id = :id
+            ");
+
+            return $stmt->execute([
+                ":name" => $data['name'],
+                ":email" => $data['email'],
+                ":password" => $data['password'],
+                ":type" => $data['type'],
+                ":address" => $data['address'],
+                ":city" => $data['city'],
+                ":id" => $id
+            ]);
+        }
+    
    }
 
     public function delete($id) {

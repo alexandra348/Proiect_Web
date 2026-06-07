@@ -78,7 +78,8 @@ class ProviderController {
 
             return [
                 "status" => 200,
-                "message" => "Provider updated successfully"
+                "message" => "Provider updated successfully",
+                "passwordChanged"=>!empty($data['password'])
             ];
 
         } catch (ProviderException $e) {

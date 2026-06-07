@@ -59,11 +59,7 @@ class UserRepository {
     public function findById($id)
     {
         $query="
-            SELECT
-                id,
-                name,
-                email,
-                created_at
+            SELECT *
             FROM users
             WHERE id=:id
             LIMIT 1
@@ -102,43 +98,43 @@ class UserRepository {
     
     public function update($id,$data)
     {
-        $query="
+        if(!empty($data['password'])) {
+            $query="
+            UPDATE users
+            SET
+                name=:name,
+                email=:email,
+                password=:password
+            WHERE id=:id
+            ";
+
+            $stmt=$this->conn->prepare($query);
+
+            return $stmt->execute([
+                ":name"=>$data['name'],
+                ":email"=>$data['email'],
+                ":password"=>$data['password'],
+                ":id"=>$id
+            ]);
+        }
+        else {
+           $query="
             UPDATE users
             SET
                 name=:name,
                 email=:email
             WHERE id=:id
-        ";
+            ";
 
-        $stmt=$this->conn->prepare($query);
+            $stmt=$this->conn->prepare($query);
 
-        return $stmt->execute([
-            ":name"=>$data['name'],
-            ":email"=>$data['email'],
-            ":id"=>$id
-        ]);
-    }
-
-
-    
-    public function updatePassword(
-        $id,
-        $hashedPassword
-    )
-    {
-
-        $query="
-            UPDATE users
-            SET password=:password
-            WHERE id=:id
-        ";
-
-        $stmt=$this->conn->prepare($query);
-
-        return $stmt->execute([
-            ":password"=>$hashedPassword,
-            ":id"=>$id
-        ]);
+            return $stmt->execute([
+                ":name"=>$data['name'],
+                ":email"=>$data['email'],
+                ":id"=>$id
+            ]);
+        }
+        
     }
 
 
