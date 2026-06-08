@@ -1,13 +1,8 @@
 import { getDrinks } from "./api.js";
 
-/* =========================
-   STATE GLOBAL (cache date)
-========================= */
+
 let drinksData = [];
 
-/* =========================
-   INIT
-========================= */
 export async function initDrinks() {
 
     const response = await getDrinks();
@@ -20,16 +15,11 @@ export async function initDrinks() {
     renderByCategory(); // default view
 }
 
-/* =========================
-   DOM REFERENCES + EVENTS
-========================= */
+
 function initDOM() {
 
-    const categoriesBtn =
-        document.querySelector("#btn-categories");
-
-    const providersBtn =
-        document.querySelector("#btn-providers");
+    const categoriesBtn = document.querySelector("#btn-categories");
+    const providersBtn = document.querySelector("#btn-providers");
 
     if (categoriesBtn) {
         categoriesBtn.addEventListener("click", renderByCategory);
@@ -40,9 +30,7 @@ function initDOM() {
     }
 }
 
-/* =========================
-   GROUP BY GENERIC
-========================= */
+
 function groupBy(list, key) {
 
     const grouped = {};
@@ -61,44 +49,35 @@ function groupBy(list, key) {
     return grouped;
 }
 
-/* =========================
-   CARD CREATION
-========================= */
+
 function createCard(drink, template, mode) {
 
     const clone = template.content.cloneNode(true);
 
-clone.querySelector(".drink-name").textContent =
-    drink.name;
+    const image = clone.querySelector(".drink-image");
+    image.src = "http://localhost:8085/uploads/drinks/drink_6a24099b61fa48.39801071.jpg";
+    image.alt = drink.name;
 
-clone.querySelector(".drink-price").textContent =
-    `${drink.price} RON`;
+    clone.querySelector(".drink-name").textContent = drink.name;
+    clone.querySelector(".drink-price").textContent = `${drink.price} RON`;
 
-const extraInfo =
-    clone.querySelector(".drink-provider");
+    const extraInfo = clone.querySelector(".drink-provider");
 
-if (mode === "category") {
-    extraInfo.textContent =
-        drink.provider || "Provider";
-}
-else {
-    extraInfo.textContent =
-        drink.category || "Category";
-}
+    if (mode === "category") {
+        extraInfo.textContent = drink.provider || "Provider";
+    }
+    else {
+        extraInfo.textContent = drink.category || "Category";
+    }
 
-return clone;
+    return clone;
 }
 
-/* =========================
-   RENDER SECTIONS (UI CORE)
-========================= */
+
 function renderSections(groupedData,mode) {
 
-    const template =
-        document.querySelector("#drink-card-template");
-
-    const container =
-        document.querySelector("#drinks-container");
+    const template = document.querySelector("#drink-card-template");
+    const container = document.querySelector("#drinks-container");
 
     if (!template || !container) return;
 
@@ -121,9 +100,7 @@ function renderSections(groupedData,mode) {
 
         // CARDS
         for (const drink of groupedData[groupName]) {
-            row.appendChild(
-                createCard(drink, template, mode)
-            );
+            row.appendChild(createCard(drink, template, mode));
         }
 
         section.appendChild(title);
@@ -133,61 +110,35 @@ function renderSections(groupedData,mode) {
     }
 }
 
-/* =========================
-   VIEW: CATEGORY
-========================= */
+
 function renderByCategory() {
 
-    const grouped =
-        groupBy(drinksData, "category");
-
-    renderSections(
-        grouped,
-        "category"
-    );
-
+    const grouped = groupBy(drinksData, "category");
+    renderSections(grouped, "category");
     setActiveButton("category");
 }
 
-/* =========================
-   VIEW: PROVIDER
-========================= */
+
 function renderByProvider() {
 
-    const grouped =
-        groupBy(drinksData, "provider");
-
-    renderSections(
-        grouped,
-        "provider"
-    );
-
+    const grouped = groupBy(drinksData, "provider");
+    renderSections(grouped, "provider");
     setActiveButton("provider");
 }
 
 
 function setActiveButton(mode) {
 
-    const categoriesBtn =
-        document.querySelector("#btn-categories");
+    const categoriesBtn = document.querySelector("#btn-categories");
 
-    const providersBtn =
-        document.querySelector("#btn-providers");
+    const providersBtn = document.querySelector("#btn-providers");
 
     if (mode === "category") {
-
         categoriesBtn.classList.add("active");
-        //categoriesBtn.classList.remove("active");
-
-        //providersBtn.classList.add("btn-inactive");
         providersBtn.classList.remove("active");
     }
     else {
-
         providersBtn.classList.add("active");
-        //providersBtn.classList.remove("btn-inactive");
-
-        //categoriesBtn.classList.add("btn-inactive");
         categoriesBtn.classList.remove("active");
     }
 }

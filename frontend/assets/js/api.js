@@ -28,7 +28,7 @@ async function request(endpoint, options = {}) {
     );
 
     const text = await response.text();
-
+    console.log(text);
     let data;
 
     try {
@@ -205,6 +205,6 @@ export async function getStatistics() {
 // ========================
 // RECOMMENDATIONS
 // ========================
-export async function getRecommendations(userId) {
-    return request(`/recommendations?user_id=${userId}`);
+export async function getRecommendations() {
+    return request("/recommendations");
 }

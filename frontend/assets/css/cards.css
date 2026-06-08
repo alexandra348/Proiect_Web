@@ -56,11 +56,12 @@ color:var(--mint);
 .drink-category{
 margin-top:6px;
 color:var(--text2);
+
 }
 
 .drink-provider{
 margin-top:6px;
-color:var(--text2);
+color:var(--info);
 }
 
 .drink-card {

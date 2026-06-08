@@ -10,7 +10,7 @@ class RecommendationsRepository {
     {
         $query = "
             SELECT
-                d.*,
+                d.id, d.name, d.price, d.image_url, c.name category, p.name provider,
 
                 (
                     COALESCE(cat.score, 0)
@@ -24,9 +24,13 @@ class RecommendationsRepository {
 
             FROM drinks d
 
+            JOIN categories c ON d.category_id = c.id
+            JOIN providers p ON d.provider_id = p.id
+
             LEFT JOIN (
                 SELECT category_id, 20 AS score
                 FROM user_favorite_categories
+                JOIN categories ON category_id = id
                 WHERE user_id = :uid
             ) cat ON cat.category_id = d.category_id
 
