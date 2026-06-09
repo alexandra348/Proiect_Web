@@ -339,7 +339,7 @@ if($uri=="/api/restrictions" && $method=="DELETE"){
 
 if($uri=="/api/preferences/wishlist" && $method=="GET"){
     $user = Authorization::requireRoles(
-        ['user', 'provider', 'admin']
+        ['user', 'admin']
     );
 
     sendResponse($preferenceController->getWishlist($user->user_id));
@@ -347,7 +347,7 @@ if($uri=="/api/preferences/wishlist" && $method=="GET"){
 
 if($uri=="/api/preferences/wishlist" && $method=="POST"){
     $user = Authorization::requireRoles(
-        ['user', 'provider', 'admin']
+        ['user', 'admin']
     );
 
     $data['user_id'] = $user->user_id;
@@ -357,7 +357,7 @@ if($uri=="/api/preferences/wishlist" && $method=="POST"){
 
 if($uri=="/api/preferences/tried" && $method=="GET"){
     $user = Authorization::requireRoles(
-        ['user', 'provider', 'admin']
+        ['user', 'admin']
     );
 
     sendResponse($preferenceController->getTriedList($user->user_id));
@@ -365,7 +365,7 @@ if($uri=="/api/preferences/tried" && $method=="GET"){
 
 if($uri=="/api/preferences/tried" && $method=="POST"){
     $user = Authorization::requireRoles(
-        ['user', 'provider', 'admin']
+        ['user', 'admin']
     );
 
     $data['user_id'] = $user->user_id;
@@ -375,7 +375,7 @@ if($uri=="/api/preferences/tried" && $method=="POST"){
 
 if($uri=="/api/preferences/categories" && $method=="GET"){
     $user = Authorization::requireRoles(
-        ['user', 'provider', 'admin']
+        ['user', 'admin']
     );
 
     sendResponse($preferenceController->getFavoriteCategories($user->user_id));
@@ -383,7 +383,7 @@ if($uri=="/api/preferences/categories" && $method=="GET"){
 
 if($uri=="/api/preferences/categories" && $method=="POST"){
     $user = Authorization::requireRoles(
-        ['user', 'provider', 'admin']
+        ['user', 'admin']
     );
 
     $data['user_id'] = $user->user_id;
@@ -393,7 +393,7 @@ if($uri=="/api/preferences/categories" && $method=="POST"){
 
 if($uri=="/api/preferences/favorite-ingredients" && $method=="GET"){
     $user = Authorization::requireRoles(
-        ['user', 'provider', 'admin']
+        ['user', 'admin']
     );
 
     sendResponse($preferenceController->getFavoriteIngredients($user->user_id));
@@ -401,7 +401,7 @@ if($uri=="/api/preferences/favorite-ingredients" && $method=="GET"){
 
 if($uri=="/api/preferences/favorite-ingredients" && $method=="POST"){
     $user = Authorization::requireRoles(
-        ['user', 'provider', 'admin']
+        ['user', 'admin']
     );
 
     $data['user_id'] = $user->user_id;
@@ -411,7 +411,7 @@ if($uri=="/api/preferences/favorite-ingredients" && $method=="POST"){
 
 if($uri=="/api/preferences/avoided-ingredients" && $method=="GET"){
     $user = Authorization::requireRoles(
-        ['user', 'provider', 'admin']
+        ['user', 'admin']
     );
 
     sendResponse($preferenceController->getAvoidedIngredients($user->user_id));
@@ -419,7 +419,7 @@ if($uri=="/api/preferences/avoided-ingredients" && $method=="GET"){
 
 if($uri=="/api/preferences/avoided-ingredients" && $method=="POST"){
     $user = Authorization::requireRoles(
-        ['user', 'provider', 'admin']
+        ['user', 'admin']
     );
 
     $data['user_id'] = $user->user_id;
@@ -429,7 +429,7 @@ if($uri=="/api/preferences/avoided-ingredients" && $method=="POST"){
 
 if($uri=="/api/preferences/restrictions" && $method=="GET"){
     $user = Authorization::requireRoles(
-        ['user', 'provider', 'admin']
+        ['user', 'admin']
     );
 
     sendResponse($preferenceController->getUserRestrictions($user->user_id));
@@ -437,7 +437,7 @@ if($uri=="/api/preferences/restrictions" && $method=="GET"){
 
 if($uri=="/api/preferences/restrictions" && $method=="POST"){
     $user = Authorization::requireRoles(
-        ['user', 'provider', 'admin']
+        ['user', 'admin']
     );
 
     $data['user_id'] = $user->user_id;
@@ -447,7 +447,7 @@ if($uri=="/api/preferences/restrictions" && $method=="POST"){
 
 if($uri=="/api/preferences/providers" && $method=="GET"){
     $user = Authorization::requireRoles(
-        ['user', 'provider', 'admin']
+        ['user', 'admin']
     );
 
     sendResponse($preferenceController->getFavoriteProviders($user->user_id));
@@ -455,7 +455,7 @@ if($uri=="/api/preferences/providers" && $method=="GET"){
 
 if($uri=="/api/preferences/providers" && $method=="POST"){
     $user = Authorization::requireRoles(
-        ['user', 'provider', 'admin']
+        ['user', 'admin']
     );
 
     $data['user_id'] = $user->user_id;

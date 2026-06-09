@@ -97,7 +97,7 @@ class RecommendationsRepository {
             )
 
             ORDER BY recommendation_score DESC
-            LIMIT 10
+            LIMIT 12
         ";
 
         $stmt = $this->conn->prepare($query);

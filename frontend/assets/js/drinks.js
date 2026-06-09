@@ -55,7 +55,11 @@ function createCard(drink, template, mode) {
     const clone = template.content.cloneNode(true);
 
     const image = clone.querySelector(".drink-image");
-    image.src = "http://localhost:8085/uploads/drinks/drink_6a24099b61fa48.39801071.jpg";
+
+    if(drink.image_url)
+        image.src = drink.image_url;
+    else
+        image.src = "/uploads/drinks/Drink.jpg"
     image.alt = drink.name;
 
     clone.querySelector(".drink-name").textContent = drink.name;
