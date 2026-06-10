@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drink Details</title>
+
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <link rel="stylesheet" href="/assets/css/buttons.css">
+    <link rel="stylesheet" href="/assets/css/cards.css">
+    <link rel="stylesheet" href="/assets/css/categories.css">
+    <link rel="stylesheet" href="/assets/css/forms.css">
+    <link rel="stylesheet" href="/assets/css/navbar.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+</head>
+
+<body style="visibility:hidden;">
+
+<div class="main-layout">
+
+    <div id="sidebar"></div>
+
+    <div class="content">
+
+        <h1>Drink Details</h1>
+
+        <div class="drink-details">
+
+        <div class="drink-hero">
+
+            <img
+                id="drink-image"
+                class="drink-image2"
+            >
+
+            <div class="drink-header">
+
+                <div>
+                    <h1 id="drink-name"></h1>
+
+                    <div class="drink-meta">
+
+                        <span id="drink-category"></span>
+                        <span>•</span>
+                        <span id="drink-price"></span>
+
+                    </div>
+                </div>
+
+                <div class="drink-actions">
+
+                    <button
+                        id="wishlist-btn"
+                        class="btn btn-secondary">
+                        ♡ Wishlist
+                    </button>
+
+                    <button
+                        id="tried-btn"
+                        class="btn btn-primary2">
+                        ✓ Tried
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="details-grid">
+
+            <div class="details-card">
+
+                <h2>Provider Information</h2>
+
+                <div id="provider-info"></div>
+
+            </div>
+
+            <div class="details-card">
+
+                <h2>Ingredients</h2>
+
+                <div id="ingredients"></div>
+
+            </div>
+
+        </div>
+
+        <div class="details-card reviews-section">
+
+            <h2>Community Reviews</h2>
+
+            <div id="reviews"></div>
+
+        </div>
+
+    </div>
+
+    <div id="tried-modal" class="modal hidden">
+
+    <div class="modal-content">
+
+        <button
+            id="close-modal"
+            class="modal-close">
+            ✕
+        </button>
+
+        <h2>Rate this drink</h2>
+
+        <form id="tried-form">
+
+            <label>Rating *</label>
+
+            <select id="drink-rating" required>
+                <option value="">Select rating</option>
+                <option value="1">1 ⭐</option>
+                <option value="2">2 ⭐</option>
+                <option value="3">3 ⭐</option>
+                <option value="4">4 ⭐</option>
+                <option value="5">5 ⭐</option>
+            </select>
+
+            <label>Comment</label>
+
+            <textarea
+                id="drink-comment"
+                rows="4">
+            </textarea>
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+                Save
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+        <div id="footer"></div>
+
+    </div>
+
+</div>
+
+<script type="module" src="/assets/js/route-guard.js"></script>
+<script type="module" src="/assets/js/drink_details.js"></script>
+
+
+</body>
+</html>

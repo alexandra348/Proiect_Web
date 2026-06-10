@@ -17,12 +17,28 @@ class PreferenceRepository {
 
     public function getWishlist($user_id) {
         $stmt = $this->conn->prepare("
-            SELECT d.* FROM wishlist w
+            SELECT d.*, p.name provider FROM wishlist w
             JOIN drinks d ON w.drink_id = d.id
+            JOIN providers p ON d.provider_id = p.id
             WHERE w.user_id = :id
         ");
         $stmt->execute([":id"=>$user_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function deleteFromWishlist($user_id,$id)
+    {
+        $query="
+            DELETE FROM wishlist
+            WHERE user_id=:user_id AND drink_id=:id
+        ";
+
+        $stmt=$this->conn->prepare($query);
+
+        return $stmt->execute([
+            ":user_id"=>$user_id,
+            ":id"=>$id
+        ]);
     }
 
     // Tried drinks
@@ -41,12 +57,28 @@ class PreferenceRepository {
 
     public function getTriedList($user_id) {
         $stmt = $this->conn->prepare("
-            SELECT d.* FROM tried_drinks w
+            SELECT d.*, p.name provider, w.rating, w.notes FROM tried_drinks w
             JOIN drinks d ON w.drink_id = d.id
+            JOIN providers p ON d.provider_id = p.id
             WHERE w.user_id = :id
         ");
         $stmt->execute([":id"=>$user_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function deleteFromTriedDrinks($user_id,$id)
+    {
+        $query="
+            DELETE FROM tried_drinks
+            WHERE user_id=:user_id AND drink_id=:id
+        ";
+
+        $stmt=$this->conn->prepare($query);
+
+        return $stmt->execute([
+            ":user_id"=>$user_id,
+            ":id"=>$id
+        ]);
     }
 
 
@@ -71,6 +103,21 @@ class PreferenceRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function deleteFromFavoriteCategories($user_id, $id)
+    {
+        $query="
+            DELETE FROM user_favorite_categories
+            WHERE user_id=:user_id AND category_id=:id
+        ";
+
+        $stmt=$this->conn->prepare($query);
+
+        return $stmt->execute([
+            ":user_id"=>$user_id,
+            ":id"=>$id
+        ]);
+    }
+
 
     //  FAVORITE INGREDIENTS
 
@@ -93,6 +140,21 @@ class PreferenceRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function deleteFromFavoriteIngredients($user_id, $id)
+    {
+        $query="
+            DELETE FROM user_favorite_ingredients
+            WHERE user_id=:user_id AND ingredient_id=:id
+        ";
+
+        $stmt=$this->conn->prepare($query);
+
+        return $stmt->execute([
+            ":user_id"=>$user_id,
+            ":id"=>$id
+        ]);
+    }
+
    
     //  AVOIDED INGREDIENTS
 
@@ -113,6 +175,21 @@ class PreferenceRepository {
         ");
         $stmt->execute([":id"=>$user_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function deleteFromAvoidIngredients($user_id, $id)
+    {
+        $query="
+            DELETE FROM user_avoided_ingredients
+            WHERE user_id=:user_id AND ingredient_id=:id
+        ";
+
+        $stmt=$this->conn->prepare($query);
+
+        return $stmt->execute([
+            ":user_id"=>$user_id,
+            ":id"=>$id
+        ]);
     }
 
   
@@ -150,11 +227,27 @@ class PreferenceRepository {
 
     public function getFavoriteProviders($user_id) {
         $stmt = $this->conn->prepare("
-            SELECT p.* FROM user_favorite_providers ufp
+            SELECT p.id, p.name FROM user_favorite_providers ufp
             JOIN providers p ON ufp.provider_id = p.id
             WHERE ufp.user_id = :id
         ");
         $stmt->execute([":id"=>$user_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function deleteFromFavoriteProviders($user_id, $id)
+    {
+        $query="
+            DELETE FROM user_favorite_providers
+            WHERE user_id=:user_id AND provider_id=:id
+        ";
+
+        $stmt=$this->conn->prepare($query);
+
+        return $stmt->execute([
+            ":user_id"=>$user_id,
+            ":id"=>$id
+        ]);
+    }
+    
 }

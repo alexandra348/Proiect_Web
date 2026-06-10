@@ -107,6 +107,11 @@ export async function createIngredient(data) {
     });
 }
 
+export async function getDrinkIngredients(id) {
+    return request(`/ingredients/drink?id=${id}`);
+}
+
+
 // ========================
 // PROVIDERS
 // ========================
@@ -207,4 +212,120 @@ export async function getStatistics() {
 // ========================
 export async function getRecommendations() {
     return request("/recommendations");
+}
+
+
+// PREFERENCES
+
+export async function getWishlist() {
+    return request("/preferences/wishlist");
+}
+
+export async function addToWishlist(drink_id) {
+    return request("/preferences/wishlist", {
+        method: "POST",
+        body: JSON.stringify({ drink_id })
+    });
+}
+
+export async function removeFromWishlist(drink_id) {
+    return request(`/preferences/wishlist?id=${drink_id}`, {
+        method: "DELETE"
+    });
+}
+
+export async function getTriedDrinks() {
+    return request("/preferences/tried");
+}
+
+export async function addTriedDrink(drink_id,rating,notes) {
+    return request("/preferences/tried", {
+        method: "POST",
+        body: JSON.stringify({ drink_id, rating, notes })
+    });
+}
+
+export async function removeTriedDrink(drink_id) {
+    return request(`/preferences/tried?id=${drink_id}`, {
+        method: "DELETE"
+    });
+}
+
+export async function getFavoriteCategories() {
+    return request("/preferences/categories");
+}
+
+export async function addFavoriteCategory(category_id) {
+    return request("/preferences/categories", {
+        method: "POST",
+        body: JSON.stringify({ category_id })
+    });
+}
+
+export async function removeFavoriteCategory(category_id) {
+    return request(`/preferences/categories?id=${category_id}`, {
+        method: "DELETE"
+    });
+}
+
+export async function getFavoriteIngredients() {
+    return request("/preferences/favorite-ingredients");
+}
+
+export async function addFavoriteIngredient(ingredient_id) {
+    return request("/preferences/favorite-ingredients", {
+        method: "POST",
+        body: JSON.stringify({ ingredient_id })
+    });
+}
+
+export async function removeFavoriteIngredient(ingredient_id) {
+    return request(`/preferences/favorite-ingredients?id=${ingredient_id}`, {
+        method: "DELETE"
+    });
+}
+
+export async function getAvoidedIngredients() {
+    return request("/preferences/avoided-ingredients");
+}
+
+export async function addAvoidedIngredient(ingredient_id) {
+    return request("/preferences/avoided-ingredients", {
+        method: "POST",
+        body: JSON.stringify({ ingredient_id })
+    });
+}
+
+export async function removeAvoidedIngredient(ingredient_id) {
+    return request(`/preferences/avoided-ingredients?id=${ingredient_id}`, {
+        method: "DELETE"
+    });
+}
+
+export async function getUserRestrictions() {
+    return request("/preferences/restrictions");
+}
+
+export async function addUserRestriction(restriction_id) {
+    return request("/preferences/restrictions", {
+        method: "POST",
+        body: JSON.stringify({ restriction_id })
+    });
+}
+
+export async function getFavoriteProviders() {
+    return request("/preferences/providers");
+}
+
+export async function addFavoriteProvider(provider_id) {
+    return request("/preferences/providers", {
+        method: "POST",
+        body: JSON.stringify({ provider_id })
+    });
+}
+
+export async function removeFavoriteProvider(provider_id) {
+    return request(`/preferences/providers?id=${provider_id}`, {
+        method: "DELETE"
+    });
 }

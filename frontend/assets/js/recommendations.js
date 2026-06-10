@@ -1,5 +1,6 @@
 import { getRecommendations } from "./api.js";
 import { initLayout } from "./components.js";
+import { createCard } from "./drinks.js";
 
 export function renderRecommendations(drinks) {
 
@@ -10,24 +11,10 @@ export function renderRecommendations(drinks) {
 
     container.innerHTML = "";
 
-    for (const drink of drinks) {
+    drinks.forEach(drink => {
 
-        const clone = template.content.cloneNode(true);
-        const image = clone.querySelector(".drink-image");
-
-        if(drink.image_url)
-            image.src = drink.image_url;
-        else
-            image.src = "/uploads/drinks/Drink.jpg"
-        image.alt = drink.name;
-        
-        clone.querySelector(".drink-name").textContent = drink.name;
-        clone.querySelector(".drink-price").textContent = `${drink.price} RON`;
-        clone.querySelector(".drink-category").textContent = drink.category;
-        clone.querySelector(".drink-provider").textContent = drink.provider;
-
-        container.appendChild(clone);
-    }
+        container.appendChild(createCard(drink, template, "category"));
+    });
 }
 
 export async function initRecommendations() {

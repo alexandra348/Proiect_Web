@@ -355,6 +355,14 @@ if($uri=="/api/preferences/wishlist" && $method=="POST"){
     sendResponse($preferenceController->addWishlist($data));
 }
 
+if($uri=="/api/preferences/wishlist" && $method=="DELETE"){
+    $user = Authorization::requireRoles(
+        ['user', 'admin']
+    );
+
+    sendResponse($preferenceController->deleteFromWishlist($user->user_id, $_GET["id"]));
+}
+
 if($uri=="/api/preferences/tried" && $method=="GET"){
     $user = Authorization::requireRoles(
         ['user', 'admin']
@@ -371,6 +379,14 @@ if($uri=="/api/preferences/tried" && $method=="POST"){
     $data['user_id'] = $user->user_id;
 
     sendResponse($preferenceController->addTried($data));
+}
+
+if($uri=="/api/preferences/tried" && $method=="DELETE"){
+    $user = Authorization::requireRoles(
+        ['user', 'admin']
+    );
+
+    sendResponse($preferenceController->deleteFromTriedDrinks($user->user_id, $_GET["id"]));
 }
 
 if($uri=="/api/preferences/categories" && $method=="GET"){
@@ -391,6 +407,14 @@ if($uri=="/api/preferences/categories" && $method=="POST"){
     sendResponse($preferenceController->addFavoriteCategory($data));
 }
 
+if($uri=="/api/preferences/categories" && $method=="DELETE"){
+    $user = Authorization::requireRoles(
+        ['user', 'admin']
+    );
+
+    sendResponse($preferenceController->deleteFromFavoriteCategories($user->user_id, $_GET["id"]));
+}
+
 if($uri=="/api/preferences/favorite-ingredients" && $method=="GET"){
     $user = Authorization::requireRoles(
         ['user', 'admin']
@@ -409,6 +433,14 @@ if($uri=="/api/preferences/favorite-ingredients" && $method=="POST"){
     sendResponse($preferenceController->addFavoriteIngredient($data));
 }
 
+if($uri=="/api/preferences/favorite-ingredients" && $method=="DELETE"){
+    $user = Authorization::requireRoles(
+        ['user', 'admin']
+    );
+
+    sendResponse($preferenceController->deleteFromFavoriteIngredients($user->user_id, $_GET["id"]));
+}
+
 if($uri=="/api/preferences/avoided-ingredients" && $method=="GET"){
     $user = Authorization::requireRoles(
         ['user', 'admin']
@@ -425,6 +457,14 @@ if($uri=="/api/preferences/avoided-ingredients" && $method=="POST"){
     $data['user_id'] = $user->user_id;
 
     sendResponse($preferenceController->addAvoidedIngredient($data));
+}
+
+if($uri=="/api/preferences/avoided-ingredients" && $method=="DELETE"){
+    $user = Authorization::requireRoles(
+        ['user', 'admin']
+    );
+
+    sendResponse($preferenceController->deleteFromAvoidIngredients($user->user_id, $_GET["id"]));
 }
 
 if($uri=="/api/preferences/restrictions" && $method=="GET"){
@@ -461,6 +501,14 @@ if($uri=="/api/preferences/providers" && $method=="POST"){
     $data['user_id'] = $user->user_id;
 
     sendResponse($preferenceController->addFavoriteProvider($data));
+}
+
+if($uri=="/api/preferences/providers" && $method=="DELETE"){
+    $user = Authorization::requireRoles(
+        ['user', 'admin']
+    );
+
+    sendResponse($preferenceController->deleteFromFavoriteProviders($user->user_id, $_GET["id"]));
 }
 
 /* STATISTICS */

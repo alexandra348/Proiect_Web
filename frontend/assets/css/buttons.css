@@ -17,11 +17,27 @@ border:2px solid var(--text);
 background:var(--green-hover);
 }
 
+.btn-primary2{
+margin-top: 10px;
+background:var(--disabled);
+color:white;
+border:2px solid var(--text);
+}
+
+.btn-primary2.active {
+    background:var(--green);
+}
+
+.btn-primary2:hover{
+background:var(--green-hover);
+}
+
 .btn-danger:hover{
 background:var(--error-hover);
 }
 
 .btn-secondary{
+margin-top: 10px;
 background:transparent;
 border:1px solid var(--green);
 color:var(--green);
@@ -87,4 +103,98 @@ box-shadow: 0 8px 20px rgba(63, 191, 127, 0.35);
 .login-btn .btn{
     width:80%;
     text-align:center;
+}
+
+.drink-actions{
+    display:flex;
+    gap:10px;
+    margin-top:12px;
+}
+
+.wishlist-btn,
+.tried-btn{
+    width:40px;
+    height:40px;
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:20px;
+    background:#f3f4f6;
+    transition:.2s;
+}
+
+.wishlist-btn:hover,
+.tried-btn:hover{
+    transform:scale(1.05);
+}
+
+.wishlist-btn.active{
+    color:#ef4444;
+}
+
+.tried-btn.active{
+    background:var(--success);
+    color:white;
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,.5);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    z-index:1000;
+}
+
+.modal-content{
+    position:relative;
+
+    width:420px;
+    background:white;
+
+    padding:24px;
+    border-radius:12px;
+
+    box-shadow:var(--shadow);
+}
+
+.modal-close{
+    position:absolute;
+    top:12px;
+    right:12px;
+
+    border:none;
+    background:none;
+
+    cursor:pointer;
+    font-size:20px;
+}
+
+.hidden{
+    display:none;
+}
+
+.section-header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.favorite-section-btn{
+    border:none;
+    background:none;
+    cursor:pointer;
+    font-size:22px;
+    padding:0;
+    margin-bottom:10px;
+    line-height:1;
+}
+
+.favorite-section-btn.active{
+    color:#ef4444;
 }

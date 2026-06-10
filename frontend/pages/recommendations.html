@@ -30,17 +30,69 @@
         <br>
 
         <div id="drinks-container" class="grid"></div>
+<template id="drink-card-template">
+    <div class="drink-card">
 
-        <template id="drink-card-template">
-            <div class="drink-card">
-                <img class="drink-image">
-                <h3 class="drink-name"></h3>
-                <p class="drink-price"></p>
-                <p class="drink-category"></p>
-                <p class="drink-provider"></p>
-            </div>
-        </template>
+        <img class="drink-image">
+        <h3 class="drink-name"></h3>
+        <p class="drink-price"></p>
+        <p class="drink-category"></p>
+        <p class="drink-provider"></p>
+        <div class="drink-actions">
+            <button class="wishlist-btn">
+                ♡
+            </button>
 
+            <button class="tried-btn">
+                ✓
+            </button>
+        </div>
+    </div>
+</template>
+
+<div id="tried-modal" class="modal hidden">
+
+    <div class="modal-content">
+
+        <button
+            id="close-modal"
+            class="modal-close">
+            ✕
+        </button>
+
+        <h2>Rate this drink</h2>
+
+        <form id="tried-form">
+
+            <label>Rating *</label>
+
+            <select id="drink-rating" required>
+                <option value="">Select rating</option>
+                <option value="1">1 ⭐</option>
+                <option value="2">2 ⭐</option>
+                <option value="3">3 ⭐</option>
+                <option value="4">4 ⭐</option>
+                <option value="5">5 ⭐</option>
+            </select>
+
+            <label>Comment</label>
+
+            <textarea
+                id="drink-comment"
+                rows="4">
+            </textarea>
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+                Save
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
 
 <div id="footer"></div>
 

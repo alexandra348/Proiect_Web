@@ -52,6 +52,30 @@ class PreferenceController {
         }
     }
 
+    public function deleteFromWishlist($user_id,$id)
+    {
+
+        try{
+
+            $this->service->deleteWishDrink($user_id,$id);
+            http_response_code(200);
+            return [
+                "success"=>true,
+                "message"=>"Drink deleted from wishlist"
+            ];
+
+        }
+        catch(Exception $e){
+
+            http_response_code(404);
+            return [
+                "success"=>false,
+                "error"=>$e->getMessage()
+            ];
+        }
+
+    }
+
     // --------------------
     // TRIED DRINKS
     // --------------------
@@ -97,6 +121,30 @@ class PreferenceController {
         }
     }
 
+    public function deleteFromTriedDrinks($user_id, $id)
+    {
+
+        try{
+
+            $this->service->deleteTriedDrink($user_id, $id);
+            http_response_code(200);
+            return [
+                "success"=>true,
+                "message"=>"Drink deleted from tried drinks"
+            ];
+
+        }
+        catch(Exception $e){
+
+            http_response_code(404);
+            return [
+                "success"=>false,
+                "error"=>$e->getMessage()
+            ];
+        }
+
+    }
+
     // --------------------
     // FAVORITE CATEGORIES
     // --------------------
@@ -135,6 +183,30 @@ class PreferenceController {
                 "message" => $e->getMessage()
             ];
         }
+    }
+
+    public function deleteFromFavoriteCategories($user_id, $id)
+    {
+
+        try{
+
+            $this->service->deleteFavoriteCategory($user_id, $id);
+            http_response_code(200);
+            return [
+                "success"=>true,
+                "message"=>"Favorite category deleted"
+            ];
+
+        }
+        catch(Exception $e){
+
+            http_response_code(404);
+            return [
+                "success"=>false,
+                "error"=>$e->getMessage()
+            ];
+        }
+
     }
 
     // --------------------
@@ -177,6 +249,30 @@ class PreferenceController {
         }
     }
 
+    public function deleteFromFavoriteIngredients($user_id, $id)
+    {
+
+        try{
+
+            $this->service->deleteFavoriteIngredient($user_id, $id);
+            http_response_code(200);
+            return [
+                "success"=>true,
+                "message"=>"Favorite ingredient deleted"
+            ];
+
+        }
+        catch(Exception $e){
+
+            http_response_code(404);
+            return [
+                "success"=>false,
+                "error"=>$e->getMessage()
+            ];
+        }
+
+    }
+
     // --------------------
     // AVOIDED INGREDIENTS
     // --------------------
@@ -215,6 +311,30 @@ class PreferenceController {
                 "message" => $e->getMessage()
             ];
         }
+    }
+
+    public function deleteFromAvoidIngredients($user_id, $id)
+    {
+
+        try{
+
+            $this->service->deleteAvoidIngredient($user_id, $id);
+            http_response_code(200);
+            return [
+                "success"=>true,
+                "message"=>"Avoided ingredient deleted"
+            ];
+
+        }
+        catch(Exception $e){
+
+            http_response_code(404);
+            return [
+                "success"=>false,
+                "error"=>$e->getMessage()
+            ];
+        }
+
     }
 
     // --------------------
@@ -312,5 +432,29 @@ class PreferenceController {
                 "message" => $e->getMessage()
             ];
         }
+    }
+
+    public function deleteFromFavoriteProviders($user_id, $id)
+    {
+
+        try{
+
+            $this->service->deleteFavoriteProvider($user_id, $id);
+            http_response_code(200);
+            return [
+                "success"=>true,
+                "message"=>"Favorite provider deleted"
+            ];
+
+        }
+        catch(Exception $e){
+
+            http_response_code(404);
+            return [
+                "success"=>false,
+                "error"=>$e->getMessage()
+            ];
+        }
+
     }
 }

@@ -38,6 +38,16 @@ class PreferenceService {
         }
     }
 
+    public function deleteWishDrink($user_id,$id)
+    {
+
+        try {
+            return $this->repository->deleteFromWishlist((int)$user_id, (int)$id);
+        } catch (PDOException $e) {
+            throw new PreferenceException("Failed to delete drink from wishlist", 0, $e);
+        }
+    }
+
     // -------------------
     // TRIED DRINKS
     // -------------------
@@ -73,6 +83,16 @@ class PreferenceService {
         }
     }
 
+    public function deleteTriedDrink($user_id,$id)
+    {
+
+        try {
+            return $this->repository->deleteFromTriedDrinks((int)$user_id,(int)$id);
+        } catch (PDOException $e) {
+            throw new PreferenceException("Failed to delete tried drink", 0, $e);
+        }
+    }
+
     // -------------------
     // FAVORITE CATEGORIES
     // -------------------
@@ -96,6 +116,17 @@ class PreferenceService {
             return $this->repository->getFavoriteCategories((int)$userId);
         } catch (PDOException $e) {
             throw new PreferenceException("Failed to fetch favorite categories", 0, $e);
+        }
+    }
+
+    public function deleteFavoriteCategory($user_id, $id)
+    {
+        $this->validateUserAndGeneric($user_id, $id);
+
+        try {
+            return $this->repository->deleteFromFavoriteCategories((int)$user_id, (int)$id);
+        } catch (PDOException $e) {
+            throw new PreferenceException("Failed to delete favorite category", 0, $e);
         }
     }
 
@@ -125,6 +156,17 @@ class PreferenceService {
         }
     }
 
+    public function deleteFavoriteIngredient($user_id, $id)
+    {
+        $this->validateUserAndGeneric($user_id, $id);
+
+        try {
+            return $this->repository->deleteFromFavoriteIngredients((int)$user_id, (int)$id);
+        } catch (PDOException $e) {
+            throw new PreferenceException("Failed to delete favorite ingredient", 0, $e);
+        }
+    }
+
     // -------------------
     // AVOIDED INGREDIENTS
     // -------------------
@@ -148,6 +190,17 @@ class PreferenceService {
             return $this->repository->getAvoidedIngredients((int)$userId);
         } catch (PDOException $e) {
             throw new PreferenceException("Failed to fetch avoided ingredients", 0, $e);
+        }
+    }
+
+    public function deleteAvoidIngredient($user_id, $id)
+    {
+        $this->validateUserAndGeneric($user_id, $id);
+
+        try {
+            return $this->repository->deleteFromAvoidIngredients((int)$user_id, (int)$id);
+        } catch (PDOException $e) {
+            throw new PreferenceException("Failed to delete avoid ingredient", 0, $e);
         }
     }
 
@@ -200,6 +253,17 @@ class PreferenceService {
             return $this->repository->getFavoriteProviders((int)$userId);
         } catch (PDOException $e) {
             throw new PreferenceException("Failed to fetch favorite providers", 0, $e);
+        }
+    }
+
+    public function deleteFavoriteProvider($user_id, $id)
+    {
+        $this->validateUserAndGeneric($user_id, $id);
+
+        try {
+            return $this->repository->deleteFromFavoriteProviders((int)$user_id, (int)$id);
+        } catch (PDOException $e) {
+            throw new PreferenceException("Failed to delete favorite provider", 0, $e);
         }
     }
 

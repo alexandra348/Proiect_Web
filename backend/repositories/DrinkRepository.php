@@ -1,18 +1,80 @@
 <?php
-class DrinkRepository {
+class DrinkRepository
+{
     private $conn;
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
-    public function findById($id) {
-        $stmt = $this->conn->prepare("SELECT * FROM drinks WHERE id=:id LIMIT 1");
+    public function findById($id)
+    {
+        $query = "
+        SELECT
+            d.*,
+            c.name AS category,
+            p.name AS provider,
+            p.address,
+            p.email,
+            p.type,
+            p.city
+        FROM drinks d
+        JOIN categories c
+            ON d.category_id = c.id
+        JOIN providers p
+            ON d.provider_id = p.id
+        WHERE d.id = :id
+        LIMIT 1
+    ";
+
+        $stmt = $this->conn->prepare($query);
         $stmt->execute([":id" => $id]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $drink = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$drink) {
+            return null;
+        }
+
+
+        $ingredientsQuery = "
+        SELECT
+            i.id,
+            i.name
+        FROM drink_ingredients di
+        JOIN ingredients i
+            ON di.ingredient_id = i.id
+        WHERE di.drink_id = :id
+    ";
+
+        $stmt = $this->conn->prepare($ingredientsQuery);
+        $stmt->execute([":id" => $id]);
+
+        $drink["ingredients"] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+        $reviewsQuery = "
+        SELECT
+            td.rating,
+            td.notes,
+            u.name AS user_name
+        FROM tried_drinks td
+        JOIN users u
+            ON td.user_id = u.id
+        WHERE td.drink_id = :id
+    ";
+
+        $stmt = $this->conn->prepare($reviewsQuery);
+        $stmt->execute([":id" => $id]);
+
+        $drink["reviews"] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $drink;
     }
 
-    public function getAll() {
+    public function getAll()
+    {
         $query = "
             SELECT d.*, p.name as provider, c.name as category
             FROM drinks d
@@ -23,13 +85,15 @@ class DrinkRepository {
         return $this->conn->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getByProvider($provider_id) {
+    public function getByProvider($provider_id)
+    {
         $stmt = $this->conn->prepare("SELECT * FROM drinks WHERE provider_id=:id");
         $stmt->execute([":id" => $provider_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function create($data) {
+    public function create($data)
+    {
         $query = "INSERT INTO drinks (name, price, provider_id, category_id, image_url)
                   VALUES (:name, :price, :provider_id, :category_id, :image_url)";
 
@@ -73,7 +137,8 @@ class DrinkRepository {
         return $stmt->execute($params);
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $stmt = $this->conn->prepare("DELETE FROM drinks WHERE id=:id");
         return $stmt->execute([":id" => $id]);
     }
