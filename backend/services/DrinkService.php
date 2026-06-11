@@ -54,7 +54,7 @@ class DrinkService {
         }
     }
 
-    public function create(array $data): bool
+    public function create(array $data)
 {
     $this->validateCreate($data);
 
@@ -156,7 +156,7 @@ class DrinkService {
         }
 
         if(isset($data['provider_id'])) {
-            if ($exists[0]["provider_id"] != $data['provider_id']) {
+            if ($exists["provider_id"] != $data['provider_id']) {
                  throw new DrinkException("You cannot update this drink");
             }
         }

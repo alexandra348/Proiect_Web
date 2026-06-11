@@ -12,23 +12,25 @@ async function request(endpoint, options = {}) {
 
     const token = localStorage.getItem("token");
 
+    const isFormData = options.body instanceof FormData;
+
     options.headers = {
-        ...(options.headers || {}),
-        "Content-Type": "application/json"
+        ...(options.headers || {})
     };
 
     if (token) {
-        options.headers.Authorization =
-            `Bearer ${token}`;
+        options.headers.Authorization = `Bearer ${token}`;
     }
 
-    const response = await fetch(
-        API_BASE + endpoint,
-        options
-    );
+    if (!isFormData) {
+        options.headers["Content-Type"] = "application/json";
+    }
+
+    const response = await fetch(API_BASE + endpoint, options);
 
     const text = await response.text();
     console.log(text);
+
     let data;
 
     try {
@@ -58,17 +60,29 @@ export async function getDrinks(id = null) {
     return request(id ? `/drinks?id=${id}` : "/drinks");
 }
 
-export async function createDrink(data) {
-    return request("/drinks", {
+export async function getProviderDrinks() {
+    return request("/drinks/provider");
+}
+
+export async function updateDrink(drinkId, formData) {
+    return request(`/drinks/update?id=${drinkId}`, {
         method: "POST",
-        body: JSON.stringify(data)
+        body: formData
     });
 }
 
+export async function createDrink(formData) {
+    return request("/drinks",
+        {
+            method: "POST",
+            body: formData
+        }
+    );
+}
+
 export async function deleteDrink(id) {
-    return request("/drinks", {
-        method: "DELETE",
-        body: JSON.stringify({ id })
+    return request(`/drinks?id=${id}`, {
+        method: "DELETE"
     });
 }
 
@@ -111,6 +125,19 @@ export async function getDrinkIngredients(id) {
     return request(`/ingredients/drink?id=${id}`);
 }
 
+export async function addIngredientToDrink(drinkId, ingredientId) {
+    return request(
+        `/ingredients/drink?drink_id=${drinkId}&ingredient_id=${ingredientId}`,
+        { method: "POST" }
+    );
+}
+
+export async function deleteIngredientFromDrink(drinkId, ingredientId) {
+    return request(
+        `/ingredients/drink?drink_id=${drinkId}&ingredient_id=${ingredientId}`,
+        { method: "DELETE" }
+    );
+}
 
 // ========================
 // PROVIDERS

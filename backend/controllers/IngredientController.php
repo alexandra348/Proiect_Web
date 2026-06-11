@@ -44,6 +44,40 @@ class IngredientController {
         }
     }
 
+    public function addIngredientToDrink($user, $drinkId, $ingredientId)
+    {
+        try {
+            return [
+                "status" => 201,
+                "message" => "Ingredient added to drink successfully",
+                "success" => $this->service->addIngredientToDrink($user, $drinkId, $ingredientId)
+            ];
+        } catch (IngredientException $e) {
+            return [
+                "status" => 500,
+                "error_code" => "ADD_FAILED",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
+    public function deleteIngredientFromDrink($user, $drinkId, $ingredientId)
+    {
+        try {
+            return [
+                "status" => 200,
+                "message" => "Ingredient removed from drink successfully",
+                "success" => $this->service->deleteIngredientFromDrink($user, $drinkId, $ingredientId)
+            ];
+        } catch (IngredientException $e) {
+            return [
+                "status" => 500,
+                "error_code" => "DELETE_FAILED",
+                "message" => $e->getMessage()
+            ];
+        }
+    }
+
     public function getIngredientById($id)
     {
         try {

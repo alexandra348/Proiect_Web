@@ -111,12 +111,13 @@ export function createCard(drink, template, mode) {
     clone.querySelector(".drink-price").textContent = `${drink.price} RON`;
 
     if (mode === "provider") {
-        clone.querySelector(".drink-provider").textContent = drink.provider || "Provider";
-        clone.querySelector(".drink-category").classList.add("hidden");
-    }
-    else if (mode === "category") {
         clone.querySelector(".drink-category").textContent = drink.category || "Category";
         clone.querySelector(".drink-provider").classList.add("hidden");
+        
+    }
+    else if (mode === "category") {
+        clone.querySelector(".drink-provider").textContent = drink.provider || "Provider";
+        clone.querySelector(".drink-category").classList.add("hidden");
     }
     else {
         clone.querySelector(".drink-category").textContent = drink.category || "Category";

@@ -20,7 +20,34 @@ class IngredientRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-   
+    public function addIngredientToDrink($drinkId, $ingredientId)
+    {
+        $stmt = $this->conn->prepare(
+            "INSERT INTO drink_ingredients (drink_id, ingredient_id)
+            VALUES (:drinkId, :ingredientId)"
+        );
+
+        return $stmt->execute([
+            ":drinkId" => $drinkId,
+            ":ingredientId" => $ingredientId
+        ]);
+    }
+
+    public function deleteIngredientFromDrink($drinkId, $ingredientId)
+    {
+        $stmt = $this->conn->prepare(
+            "DELETE FROM drink_ingredients
+            WHERE drink_id = :drinkId
+            AND ingredient_id = :ingredientId"
+        );
+
+        return $stmt->execute([
+            ":drinkId" => $drinkId,
+            ":ingredientId" => $ingredientId
+        ]);
+    }
+
+
     public function findById($id) {
         $stmt = $this->conn->prepare("SELECT * FROM ingredients WHERE id=:id");
         $stmt->execute([":id"=>$id]);

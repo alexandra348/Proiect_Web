@@ -87,19 +87,38 @@ class DrinkRepository
 
     public function getByProvider($provider_id)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM drinks WHERE provider_id=:id");
+        $stmt = $this->conn->prepare("SELECT d.*, c.name category FROM drinks d JOIN categories c
+        ON d.category_id = c.id WHERE provider_id=:id");
         $stmt->execute([":id" => $provider_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function create($data)
     {
-        $query = "INSERT INTO drinks (name, price, provider_id, category_id, image_url)
-                  VALUES (:name, :price, :provider_id, :category_id, :image_url)";
+        $query = "
+            INSERT INTO drinks
+            (
+                name,
+                price,
+                provider_id,
+                category_id,
+                image_url
+            )
+            VALUES
+            (
+                :name,
+                :price,
+                :provider_id,
+                :category_id,
+                :image_url
+            )
+            RETURNING id
+        ";
 
         $stmt = $this->conn->prepare($query);
+        $stmt->execute($data);
 
-        return $stmt->execute($data);
+        return $stmt->fetchColumn();
     }
 
     public function update(int $id, array $data): bool

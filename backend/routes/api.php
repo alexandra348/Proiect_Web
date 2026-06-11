@@ -85,7 +85,7 @@ $categoryController=new CategoryController(
 
 $ingredientController=new IngredientController(
     new IngredientService(
-        new IngredientRepository($db)
+        new IngredientRepository($db), new DrinkRepository($db)
     )
 );
 
@@ -146,6 +146,15 @@ if($uri=="/api/drinks" && $method=="GET"){
     isset($_GET["id"])
         ? sendResponse($drinkController->getDrinkById($_GET["id"]))
         : sendResponse($drinkController->getAllDrinks());
+}
+
+if($uri=="/api/drinks/provider" && $method=="GET"){
+
+    $user = Authorization::requireRoles(['admin','provider']);
+    if($user->role == 'provider')
+        sendResponse($drinkController->getDrinkByProvider($user->user_id));
+    else
+        sendResponse($drinkController->getDrinkByProvider($_GET["id"]));
 }
 
 if($uri=="/api/drinks" && $method=="POST"){
@@ -213,6 +222,20 @@ if($uri=="/api/ingredients" && $method=="GET"){
 if($uri=="/api/ingredients/drink" && $method=="GET"){
 
      sendResponse($ingredientController->getIngredientsByDrink($_GET["id"]));
+}
+
+if ($uri == "/api/ingredients/drink" && $method == "POST") {
+
+    $user = Authorization::requireRoles(['admin','provider']);
+
+    sendResponse($ingredientController->addIngredientToDrink($user, $_GET["drink_id"], $_GET["ingredient_id"]));
+}
+
+if ($uri == "/api/ingredients/drink" && $method == "DELETE") {
+
+    $user = Authorization::requireRoles(['admin','provider']);
+
+    sendResponse($ingredientController->deleteIngredientFromDrink($user, $_GET["drink_id"], $_GET["ingredient_id"]));
 }
 
 if($uri=="/api/ingredients" && $method=="POST"){

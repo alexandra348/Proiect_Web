@@ -25,6 +25,134 @@
 
 <h1>Dashboard</h1>
 
+<div id="provider-dashboard">
+
+    <div class="stats-grid">
+
+        <div class="card stat-card">
+            <h3 id="drinks-count">0</h3>
+            <p>Drinks</p>
+        </div>
+
+    </div>
+
+    <div class="dashboard-toolbar">
+        <button
+            id="add-drink-btn"
+            class="btn btn-primary">
+            + Add Drink
+        </button>
+    </div>
+
+    <div id="provider-drinks"></div>
+
+</div>
+
+<div id="drink-modal" class="modal hidden">
+
+    <div class="modal-content modal-large">
+
+        <button
+            id="close-drink-modal"
+            class="modal-close">
+            ✕
+        </button>
+
+        <h2>Add Drink</h2>
+
+        <form id="drink-form">
+
+            <div class="form-group">
+                <label>Name</label>
+
+                <input
+                    id="drink-name"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label>Price</label>
+
+                <input
+                    id="drink-price"
+                    type="number"
+                    step="0.01"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+
+                <select
+                    id="drink-category"
+                    required>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Image</label>
+
+                <input
+                    id="drink-image"
+                    type="file"
+                    accept="image/*">
+            </div>
+
+            <div class="form-group">
+
+            <label>Ingredients</label>
+
+            <div class="multi-select">
+
+                <button
+                    type="button"
+                    id="ingredients-toggle"
+                    class="multi-select-btn">
+
+                    Select ingredients
+
+                </button>
+
+                <div
+                    id="ingredients-dropdown"
+                    class="multi-select-dropdown hidden">
+                </div>
+
+            </div>
+
+        </div>
+
+            <button
+                type="submit"
+                class="btn btn-primary">
+                Save Drink
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div id="ingredients-modal" class="modal hidden">
+
+    <div class="modal-content">
+
+        <button
+            id="close-ingredients-modal"
+            class="modal-close">
+            ✕
+        </button>
+
+        <h2 id="ingredients-title">
+            Ingredients
+        </h2>
+
+        <div id="ingredients-list"></div>
+
+    </div>
+
+</div>
 
 <div id="footer"></div>
 
@@ -32,7 +160,7 @@
 </div>
 
 <script type="module" src="../assets/js/route-guard.js"></script>
-<script type="module" src="../assets/js/app.js"></script>
+<script type="module" src="../assets/js/provider_dashboard.js"></script>
 
 
 </body>

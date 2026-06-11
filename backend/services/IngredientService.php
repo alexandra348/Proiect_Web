@@ -2,14 +2,17 @@
 
 require_once __DIR__ . '/../repositories/IngredientRepository.php';
 require_once __DIR__ . '/../exceptions/IngredientException.php';
+require_once __DIR__ . '/../repositories/DrinkRepository.php';
 
 class IngredientService {
 
     private IngredientRepository $repository;
+    private DrinkRepository $drinkRepository;
 
-    public function __construct(IngredientRepository $repository)
+    public function __construct(IngredientRepository $repository, DrinkRepository $drinkRepository)
     {
         $this->repository = $repository;
+        $this->drinkRepository = $drinkRepository;
     }
 
     public function getAll(): array
@@ -53,6 +56,62 @@ class IngredientService {
 
         } catch (PDOException $e) {
             throw new IngredientException("Failed to fetch ingredients", 0, $e);
+        }
+    }
+
+    public function addIngredientToDrink($user, $drinkId, $ingredientId): bool
+    {
+        if (!is_numeric($drinkId) || $drinkId <= 0) {
+            throw new IngredientException("Invalid drink ID");
+        }
+
+        if (!is_numeric($ingredientId) || $ingredientId <= 0) {
+            throw new IngredientException("Invalid ingredient ID");
+        }
+
+        try {
+            $exists = $this->drinkRepository->findById((int)$drinkId);
+
+            if (!$exists) {
+                throw new DrinkException("Drink not found");
+            }
+
+            if($user->role === 'provider' && $exists['provider_id'] != $user->user_id){
+               throw new DrinkException("You cannot add ingredient to this drink");
+            }
+
+            return $this->repository->addIngredientToDrink((int)$drinkId,(int)$ingredientId);
+
+        } catch (PDOException $e) {
+            throw new IngredientException("Failed to add ingredient to drink", 0, $e);
+        }
+    }
+
+    public function deleteIngredientFromDrink($user, $drinkId, $ingredientId): bool
+    {
+        if (!is_numeric($drinkId) || $drinkId <= 0) {
+            throw new IngredientException("Invalid drink ID");
+        }
+
+        if (!is_numeric($ingredientId) || $ingredientId <= 0) {
+            throw new IngredientException("Invalid ingredient ID");
+        }
+
+        try {
+
+            $exists = $this->drinkRepository->findById((int)$drinkId);
+
+            if (!$exists) {
+                throw new DrinkException("Drink not found");
+            }
+
+            if($user->role === 'provider' && $exists['provider_id'] != $user->user_id){
+               throw new DrinkException("You cannot delete ingredient from this drink");
+            }
+
+            return $this->repository->deleteIngredientFromDrink((int)$drinkId,(int)$ingredientId);
+        } catch (PDOException $e) {
+            throw new IngredientException("Failed to delete ingredient from drink", 0, $e);
         }
     }
 
