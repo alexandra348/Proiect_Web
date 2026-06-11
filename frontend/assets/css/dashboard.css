@@ -318,3 +318,22 @@ overflow-y: auto;
 .hidden{
     display:none;
 }
+
+.dashboard-tabs{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.tab-btn{
+    padding:12px 20px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    background:#f3f4f6;
+}
+
+.tab-btn.active{
+    background:var(--green);
+    color:white;
+}

@@ -71,10 +71,10 @@ class ProviderController {
         }
     }
 
-    public function update($id, $data)
+    public function update($id, $data, $role)
     {
         try {
-            $this->service->update($id, $data);
+            $this->service->update($id, $data, $role);
 
             return [
                 "status" => 200,

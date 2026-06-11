@@ -272,10 +272,10 @@ if($uri=="/api/providers" && $method=="PUT"){
     $user = Authorization::requireRoles(['admin','provider']);
 
     if($user->role == 'provider') {
-        sendResponse($providerController->update($user->user_id, $data));
+        sendResponse($providerController->update($user->user_id, $data, "provider"));
     }
     else {
-        sendResponse($providerController->update($_GET["id"],$data));
+        sendResponse($providerController->update($_GET["id"],$data, "admin"));
     }   
 }
 
@@ -303,17 +303,22 @@ if($uri=="/api/users" && $method=="GET"){
 }
 
 if($uri=="/api/users" && $method=="POST"){
-    sendResponse($userController->register($data));
+    sendResponse($userController->register($data, null));
+}
+
+if($uri=="/api/users/create" && $method=="POST"){
+    Authorization::requireRoles(['admin']);
+    sendResponse($userController->register($data, $_GET['role']));
 }
 
 if($uri=="/api/users" && $method=="PUT"){
     $user = Authorization::requireRoles(['admin','user']);
 
     if($user->role === 'user') {
-        sendResponse($userController->update($user->user_id,$data));
+        sendResponse($userController->update($user->user_id,$data,"user"));
     }
     else {
-        sendResponse($userController->update($_GET["id"],$data));
+        sendResponse($userController->update($_GET["id"],$data, "admin"));
     }
     
 }
@@ -325,7 +330,14 @@ if($uri=="/api/users" && $method=="DELETE"){
         sendResponse($userController->delete($user->user_id));
     }
     else {
-        sendResponse($userController->delete($_GET["id"]));
+        if ($user->user_id != $_GET["id"]) {
+           sendResponse($userController->delete($_GET["id"]));
+        }
+        else {
+            sendResponse(["success" => false,
+                "data" => "You cannot delete admin account"]);
+        }
+        
     }
     
 }

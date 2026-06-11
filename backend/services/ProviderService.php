@@ -72,7 +72,7 @@ class ProviderService {
         }
     }
 
-    public function update($id, array $data): bool
+    public function update($id, $data, $role): bool
     {
         if (!is_numeric($id) || $id <= 0) {
             throw new ProviderException("Invalid provider ID");
@@ -87,18 +87,26 @@ class ProviderService {
                 throw new ProviderException("Provider not found");
             }
 
-            if(!empty($data['currentPassword']) && !empty($data['password'])) {
+            if($role == "provider") {
+                if(!empty($data['currentPassword']) && !empty($data['password'])) {
 
-                if (!password_verify($data['currentPassword'], $provider['password'])) {
-                    throw new Exception("Current password incorrect");
+                    if (!password_verify($data['currentPassword'], $provider['password'])) {
+                        throw new Exception("Current password incorrect");
+                    }
+
+                    $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
                 }
+                
+                if(!empty($data['password']) && empty($data['currentPassword'])){
+                    throw new Exception("Current password required");
+                }
+            }
+            else {
+                if (!empty($data['password']))
+                   $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+            }
 
-                $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
-            }
             
-            if(!empty($data['password']) && empty($data['currentPassword'])){
-                throw new Exception("Current password required");
-            }
 
             return $this->repository->update((int)$id, $data);
 

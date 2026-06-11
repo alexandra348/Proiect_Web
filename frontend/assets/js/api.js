@@ -89,21 +89,27 @@ export async function deleteDrink(id) {
 // ========================
 // CATEGORIES
 // ========================
-export async function getCategories() {
-    return request("/categories");
+export async function getCategories(id = null) {
+    return request(id ? `/categories?id=${id}` : "/categories");
 }
 
-export async function createCategory(data) {
+export async function createCategory(name) {
     return request("/categories", {
         method: "POST",
-        body: JSON.stringify(data)
+        body: JSON.stringify({name})
+    });
+}
+
+export async function updateCategory(id,name) {
+    return request(`/categories?id=${id}`, {
+        method: "PUT",
+        body: JSON.stringify({name})
     });
 }
 
 export async function deleteCategory(id) {
-    return request("/categories", {
+    return request(`/categories?id=${id}`, {
         method: "DELETE",
-        body: JSON.stringify({ id })
     });
 }
 
@@ -114,10 +120,23 @@ export async function getIngredients() {
     return request("/ingredients");
 }
 
-export async function createIngredient(data) {
+export async function createIngredient(name) {
     return request("/ingredients", {
         method: "POST",
-        body: JSON.stringify(data)
+        body: JSON.stringify({name})
+    });
+}
+
+export async function updateIngredient(id,name) {
+    return request(`/ingredients?id=${id}`, {
+        method: "PUT",
+        body: JSON.stringify({name})
+    });
+}
+
+export async function deleteIngredient(id) {
+    return request(`/ingredients?id=${id}`, {
+        method: "DELETE",
     });
 }
 
@@ -153,15 +172,15 @@ export async function createProvider(data) {
     });
 }
 
-export async function updateProvider(data) {
-    return request("/providers", {
+export async function updateProvider(id = null, data) {
+    return request(id ? `/providers?id=${id}` : "/providers", {
         method: "PUT",
         body: JSON.stringify(data)
     });
 }
 
-export async function deleteProvider() {
-    return request("/providers", {
+export async function deleteProvider(id = null) {
+    return request(id ? `/providers?id=${id}` : "/providers", {
         method: "DELETE"
     });
 }
@@ -180,15 +199,22 @@ export async function registerUser(data) {
     });
 }
 
-export async function updateUser(data) {
-    return request("/users", {
+export async function createUser(data,role) {
+    return request(`/users/create?role=${role}`, {
+        method: "POST",
+        body: JSON.stringify(data)
+    });
+}
+
+export async function updateUser(id = null, data) {
+    return request(id ? `/users?id=${id}` : "/users", {
         method: "PUT",
         body: JSON.stringify(data)
     });
 }
 
-export async function deleteUser() {
-    return request("/users", {
+export async function deleteUser(id = null) {
+    return request(id ? `/users?id=${id}` : "/users", {
         method: "DELETE"
     });
 }

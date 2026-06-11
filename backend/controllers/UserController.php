@@ -12,11 +12,11 @@ class UserController {
     }
 
 
-    public function register($data)
+    public function register($data, $role)
     {
         try {
 
-            $this->service->create($data);
+            $this->service->create($data, $role);
 
             http_response_code(201);
 
@@ -92,12 +92,12 @@ class UserController {
 
 
 
-    public function update($id, $data)
+    public function update($id, $data, $user)
     {
 
         try{
 
-            $this->service->update($id, $data);
+            $this->service->update($id, $data, $user);
 
             http_response_code(200);
 
@@ -127,11 +127,8 @@ class UserController {
 
         try{
 
-            $this->service
-                 ->delete($id);
-
+            $this->service->delete($id);
             http_response_code(200);
-
             return [
                 "success"=>true,
                 "message"=>"User deleted"
@@ -141,7 +138,6 @@ class UserController {
         catch(Exception $e){
 
             http_response_code(404);
-
             return [
                 "success"=>false,
                 "error"=>$e->getMessage()
