@@ -41,6 +41,23 @@ class DrinkService {
         }
     }
 
+    public function searchDrink($term): array
+    {
+
+        try {
+            $drink = $this->repository->search($term);
+
+            if (!$drink) {
+                throw new DrinkException("No drink found");
+            }
+
+            return $drink;
+
+        } catch (PDOException $e) {
+            throw new DrinkException("Failed to fetch drinks", 0, $e);
+        }
+    }
+
     public function getByProvider($providerId): array
     {
         if (!is_numeric($providerId) || $providerId <= 0) {

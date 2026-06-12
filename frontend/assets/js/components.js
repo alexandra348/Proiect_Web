@@ -53,9 +53,27 @@ export async function initLayout(){
 
     await loadComponent("sidebar","/components/sidebar.html");
     initDashboard();
-    await loadComponent("navbar","/components/navbar.html");
     initLoginButton();
     await loadComponent("footer","/components/footer.html");
     await loadComponent("drink-template","/components/drink-card.html");
+    
+    document
+    .querySelector("#drink-search")
+    ?.addEventListener(
+        "keydown",
+        async e => {
+
+            if (e.key !== "Enter") {
+                return;
+            }
+
+            const term = e.target.value.trim();
+            if (!term) {
+                return;
+            }
+
+            window.location.replace(`/pages/search.html?term=${encodeURIComponent(term)}`);
+        }
+    );
 
 }

@@ -148,6 +148,10 @@ if($uri=="/api/drinks" && $method=="GET"){
         : sendResponse($drinkController->getAllDrinks());
 }
 
+if($uri=="/api/drinks/search" && $method=="GET") {
+    sendResponse($drinkController->searchDrink($_GET["term"]));
+}
+
 if($uri=="/api/drinks/provider" && $method=="GET"){
 
     $user = Authorization::requireRoles(['admin','provider']);

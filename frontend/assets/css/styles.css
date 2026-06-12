@@ -84,3 +84,17 @@ color:var(--text2);
 display:flex;
 gap:16px;
 }
+
+.empty-state{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:70vh;
+    font-size:36px;
+    font-weight:600;
+    color:var(--text2);
+    text-align:center;
+    width:100%;
+    white-space: nowrap;
+    margin-left: 150%;
+}

@@ -50,6 +50,29 @@ class DrinkController {
         }
     }
 
+    public function searchDrink($term)
+    {
+        try {
+            return [
+                "status" => 200,
+                "data" => $this->service->searchDrink($term)
+            ];
+
+        } catch (DrinkException $e) {
+
+            $message = $e->getMessage();
+
+            $status = ($message === "No drink found") ? 404 : 400;
+
+            return [
+                "status" => $status,
+                "error_code" => "DRINK_ERROR",
+                "message" => $message
+            ];
+        }
+    }
+
+
     public function getDrinkByProvider($id)
     {
         try {

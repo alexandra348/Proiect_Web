@@ -64,6 +64,10 @@ export async function getProviderDrinks(id = null) {
     return request(id ? `/drinks/provider?id=${id}` : "/drinks/provider");
 }
 
+export async function searchDrinks(term) {
+    return request(`/drinks/search?term=${encodeURIComponent(term)}`);
+}
+
 export async function updateDrink(drinkId, formData) {
     return request(`/drinks/update?id=${drinkId}`, {
         method: "POST",
