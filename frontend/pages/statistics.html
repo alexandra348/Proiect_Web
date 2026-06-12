@@ -49,16 +49,47 @@
 <section class="stats-section">
     <h2>Top Categories</h2>
     <div id="categories-chart" class="chart-box"></div>
+
+    <div class="export-actions">
+    <button class="btn btn-primary export-csv-btn" data-section="top_categories">
+        Export CSV
+    </button>
+
+    <button class="btn btn-primary export-svg-btn" data-section="top_categories">
+        Export SVG
+    </button>
+</div>
 </section>
+
 
 <section class="stats-section">
     <h2>Top Providers</h2>
     <div id="providers-chart" class="chart-box"></div>
+
+    <div class="export-actions">
+        <button class="btn btn-primary export-csv-btn" data-section="top_providers">
+            Export CSV
+        </button>
+
+        <button class="btn btn-primary export-svg-btn" data-section="top_providers">
+            Export SVG
+        </button>
+    </div>
 </section>
 
 <section class="stats-section">
     <h2>Top Restrictions</h2>
     <div id="restrictions-chart" class="chart-box"></div>
+
+    <div class="export-actions">
+        <button class="btn btn-primary export-csv-btn" data-section="top_restrictions">
+            Export CSV
+        </button>
+
+        <button class="btn btn-primary export-svg-btn" data-section="top_restrictions">
+            Export SVG
+        </button>
+    </div>
 </section>
 
 <section>
@@ -72,6 +103,17 @@
         </thead>
         <tbody id="top-drinks-table"></tbody>
     </table>
+
+    <div class="export-actions">
+      <button class="btn btn-primary export-csv-btn" data-section="top_drinks">
+        Export CSV
+      </button>
+
+      <button id="rss-btn" class="btn btn-primary">
+        Export RSS
+       </button>
+    </div>
+
 </section>
 
 <section>
@@ -85,6 +127,12 @@
         </thead>
         <tbody id="top-ingredients-table"></tbody>
     </table>
+
+      <div class="export-actions">
+    <button class="btn btn-primary export-csv-btn" data-section="top_ingredients">
+        Export CSV
+    </button>
+    </div>
 </section>
 
 <section>
@@ -98,6 +146,12 @@
         </thead>
         <tbody id="avoided-ingredients-table"></tbody>
     </table>
+
+     <div class="export-actions">
+    <button class="btn btn-primary export-csv-btn" data-section="avoided_ingredients">
+        Export CSV
+    </button>
+    </div>
 </section>
 
 <div id="footer"></div>
