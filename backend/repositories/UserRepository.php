@@ -10,9 +10,35 @@ class UserRepository {
     }
 
 
-    public function create($data)
+    public function create($data, $role)
     {
-        $query = "
+        if ($role) {
+            $query = "
+            INSERT INTO users (
+                name,
+                email,
+                password,
+                role
+            )
+            VALUES (
+                :name,
+                :email,
+                :password,
+                :role
+            )
+            ";
+
+            $stmt = $this->conn->prepare($query);
+
+            return $stmt->execute([
+                ":name"=>$data['name'],
+                ":email"=>$data['email'],
+                ":password"=>$data['password'],
+                ":role"=>$role
+            ]);
+        }
+        else{
+            $query = "
             INSERT INTO users (
                 name,
                 email,
@@ -23,15 +49,17 @@ class UserRepository {
                 :email,
                 :password
             )
-        ";
+            ";
 
-        $stmt = $this->conn->prepare($query);
+            $stmt = $this->conn->prepare($query);
 
-        return $stmt->execute([
-            ":name"=>$data['name'],
-            ":email"=>$data['email'],
-            ":password"=>$data['password']
-        ]);
+            return $stmt->execute([
+                ":name"=>$data['name'],
+                ":email"=>$data['email'],
+                ":password"=>$data['password']
+            ]);
+        }
+        
     }
 
 

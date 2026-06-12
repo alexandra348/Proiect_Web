@@ -12,23 +12,25 @@ async function request(endpoint, options = {}) {
 
     const token = localStorage.getItem("token");
 
+    const isFormData = options.body instanceof FormData;
+
     options.headers = {
-        ...(options.headers || {}),
-        "Content-Type": "application/json"
+        ...(options.headers || {})
     };
 
     if (token) {
-        options.headers.Authorization =
-            `Bearer ${token}`;
+        options.headers.Authorization = `Bearer ${token}`;
     }
 
-    const response = await fetch(
-        API_BASE + endpoint,
-        options
-    );
+    if (!isFormData) {
+        options.headers["Content-Type"] = "application/json";
+    }
+
+    const response = await fetch(API_BASE + endpoint, options);
 
     const text = await response.text();
     console.log(text);
+
     let data;
 
     try {
@@ -58,38 +60,60 @@ export async function getDrinks(id = null) {
     return request(id ? `/drinks?id=${id}` : "/drinks");
 }
 
-export async function createDrink(data) {
-    return request("/drinks", {
+export async function getProviderDrinks(id = null) {
+    return request(id ? `/drinks/provider?id=${id}` : "/drinks/provider");
+}
+
+export async function searchDrinks(term) {
+    return request(`/drinks/search?term=${encodeURIComponent(term)}`);
+}
+
+export async function updateDrink(drinkId, formData) {
+    return request(`/drinks/update?id=${drinkId}`, {
         method: "POST",
-        body: JSON.stringify(data)
+        body: formData
     });
 }
 
+export async function createDrink(formData) {
+    return request("/drinks",
+        {
+            method: "POST",
+            body: formData
+        }
+    );
+}
+
 export async function deleteDrink(id) {
-    return request("/drinks", {
-        method: "DELETE",
-        body: JSON.stringify({ id })
+    return request(`/drinks?id=${id}`, {
+        method: "DELETE"
     });
 }
 
 // ========================
 // CATEGORIES
 // ========================
-export async function getCategories() {
-    return request("/categories");
+export async function getCategories(id = null) {
+    return request(id ? `/categories?id=${id}` : "/categories");
 }
 
-export async function createCategory(data) {
+export async function createCategory(name) {
     return request("/categories", {
         method: "POST",
-        body: JSON.stringify(data)
+        body: JSON.stringify({name})
+    });
+}
+
+export async function updateCategory(id,name) {
+    return request(`/categories?id=${id}`, {
+        method: "PUT",
+        body: JSON.stringify({name})
     });
 }
 
 export async function deleteCategory(id) {
-    return request("/categories", {
+    return request(`/categories?id=${id}`, {
         method: "DELETE",
-        body: JSON.stringify({ id })
     });
 }
 
@@ -100,10 +124,23 @@ export async function getIngredients() {
     return request("/ingredients");
 }
 
-export async function createIngredient(data) {
+export async function createIngredient(name) {
     return request("/ingredients", {
         method: "POST",
-        body: JSON.stringify(data)
+        body: JSON.stringify({name})
+    });
+}
+
+export async function updateIngredient(id,name) {
+    return request(`/ingredients?id=${id}`, {
+        method: "PUT",
+        body: JSON.stringify({name})
+    });
+}
+
+export async function deleteIngredient(id) {
+    return request(`/ingredients?id=${id}`, {
+        method: "DELETE",
     });
 }
 
@@ -111,6 +148,19 @@ export async function getDrinkIngredients(id) {
     return request(`/ingredients/drink?id=${id}`);
 }
 
+export async function addIngredientToDrink(drinkId, ingredientId) {
+    return request(
+        `/ingredients/drink?drink_id=${drinkId}&ingredient_id=${ingredientId}`,
+        { method: "POST" }
+    );
+}
+
+export async function deleteIngredientFromDrink(drinkId, ingredientId) {
+    return request(
+        `/ingredients/drink?drink_id=${drinkId}&ingredient_id=${ingredientId}`,
+        { method: "DELETE" }
+    );
+}
 
 // ========================
 // PROVIDERS
@@ -126,15 +176,15 @@ export async function createProvider(data) {
     });
 }
 
-export async function updateProvider(data) {
-    return request("/providers", {
+export async function updateProvider(id = null, data) {
+    return request(id ? `/providers?id=${id}` : "/providers", {
         method: "PUT",
         body: JSON.stringify(data)
     });
 }
 
-export async function deleteProvider() {
-    return request("/providers", {
+export async function deleteProvider(id = null) {
+    return request(id ? `/providers?id=${id}` : "/providers", {
         method: "DELETE"
     });
 }
@@ -146,6 +196,10 @@ export async function getUsers(id = null) {
     return request(id ? `/users?id=${id}` : "/users");
 }
 
+export async function getUserRole() {
+    return request("/auth/me");
+}
+
 export async function registerUser(data) {
     return request("/users", {
         method: "POST",
@@ -153,15 +207,22 @@ export async function registerUser(data) {
     });
 }
 
-export async function updateUser(data) {
-    return request("/users", {
+export async function createUser(data,role) {
+    return request(`/users/create?role=${role}`, {
+        method: "POST",
+        body: JSON.stringify(data)
+    });
+}
+
+export async function updateUser(id = null, data) {
+    return request(id ? `/users?id=${id}` : "/users", {
         method: "PUT",
         body: JSON.stringify(data)
     });
 }
 
-export async function deleteUser() {
-    return request("/users", {
+export async function deleteUser(id = null) {
+    return request(id ? `/users?id=${id}` : "/users", {
         method: "DELETE"
     });
 }

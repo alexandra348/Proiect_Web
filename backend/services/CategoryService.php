@@ -41,7 +41,7 @@ class CategoryService {
         }
     }
 
-    public function create(array $data): bool
+    public function create($data): bool
     {
         if (empty($data['name'])) {
             throw new CategoryException("Name is required");
@@ -54,7 +54,7 @@ class CategoryService {
         }
     }
 
-    public function update($id, array $data): bool
+    public function update($id, $data): bool
     {
         if (!is_numeric($id) || $id <= 0) {
             throw new CategoryException("Invalid category ID");

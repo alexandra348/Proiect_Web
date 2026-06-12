@@ -85,7 +85,7 @@ $categoryController=new CategoryController(
 
 $ingredientController=new IngredientController(
     new IngredientService(
-        new IngredientRepository($db)
+        new IngredientRepository($db), new DrinkRepository($db)
     )
 );
 
@@ -146,6 +146,19 @@ if($uri=="/api/drinks" && $method=="GET"){
     isset($_GET["id"])
         ? sendResponse($drinkController->getDrinkById($_GET["id"]))
         : sendResponse($drinkController->getAllDrinks());
+}
+
+if($uri=="/api/drinks/search" && $method=="GET") {
+    sendResponse($drinkController->searchDrink($_GET["term"]));
+}
+
+if($uri=="/api/drinks/provider" && $method=="GET"){
+
+    $user = Authorization::requireRoles(['admin','provider']);
+    if($user->role == 'provider')
+        sendResponse($drinkController->getDrinkByProvider($user->user_id));
+    else
+        sendResponse($drinkController->getDrinkByProvider($_GET["id"]));
 }
 
 if($uri=="/api/drinks" && $method=="POST"){
@@ -215,6 +228,20 @@ if($uri=="/api/ingredients/drink" && $method=="GET"){
      sendResponse($ingredientController->getIngredientsByDrink($_GET["id"]));
 }
 
+if ($uri == "/api/ingredients/drink" && $method == "POST") {
+
+    $user = Authorization::requireRoles(['admin','provider']);
+
+    sendResponse($ingredientController->addIngredientToDrink($user, $_GET["drink_id"], $_GET["ingredient_id"]));
+}
+
+if ($uri == "/api/ingredients/drink" && $method == "DELETE") {
+
+    $user = Authorization::requireRoles(['admin','provider']);
+
+    sendResponse($ingredientController->deleteIngredientFromDrink($user, $_GET["drink_id"], $_GET["ingredient_id"]));
+}
+
 if($uri=="/api/ingredients" && $method=="POST"){
     Authorization::requireRoles(['admin']);
     sendResponse($ingredientController->create($data));
@@ -249,10 +276,10 @@ if($uri=="/api/providers" && $method=="PUT"){
     $user = Authorization::requireRoles(['admin','provider']);
 
     if($user->role == 'provider') {
-        sendResponse($providerController->update($user->user_id, $data));
+        sendResponse($providerController->update($user->user_id, $data, "provider"));
     }
     else {
-        sendResponse($providerController->update($_GET["id"],$data));
+        sendResponse($providerController->update($_GET["id"],$data, "admin"));
     }   
 }
 
@@ -279,18 +306,31 @@ if($uri=="/api/users" && $method=="GET"){
         : sendResponse($userController->getAll());
 }
 
+if($uri=="/api/auth/me" && $method=="GET") {
+    $user = Authorization::requireRoles(['admin', 'user', 'provider']);
+    if($user)
+        sendResponse(["success"=>true, "role"=>$user->role]);
+    else
+        sendResponse(["success"=>false, "You are not authenticated"]);
+}
+
 if($uri=="/api/users" && $method=="POST"){
-    sendResponse($userController->register($data));
+    sendResponse($userController->register($data, null));
+}
+
+if($uri=="/api/users/create" && $method=="POST"){
+    Authorization::requireRoles(['admin']);
+    sendResponse($userController->register($data, $_GET['role']));
 }
 
 if($uri=="/api/users" && $method=="PUT"){
     $user = Authorization::requireRoles(['admin','user']);
 
     if($user->role === 'user') {
-        sendResponse($userController->update($user->user_id,$data));
+        sendResponse($userController->update($user->user_id,$data,"user"));
     }
     else {
-        sendResponse($userController->update($_GET["id"],$data));
+        sendResponse($userController->update($_GET["id"],$data, "admin"));
     }
     
 }
@@ -302,7 +342,14 @@ if($uri=="/api/users" && $method=="DELETE"){
         sendResponse($userController->delete($user->user_id));
     }
     else {
-        sendResponse($userController->delete($_GET["id"]));
+        if ($user->user_id != $_GET["id"]) {
+           sendResponse($userController->delete($_GET["id"]));
+        }
+        else {
+            sendResponse(["success" => false,
+                "data" => "You cannot delete admin account"]);
+        }
+        
     }
     
 }

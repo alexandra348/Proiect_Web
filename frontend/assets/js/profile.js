@@ -2,12 +2,24 @@ import {
     updateUser,
     updateProvider,
     deleteUser,
-    deleteProvider
+    deleteProvider,
+    getUserRole
 } from "./api.js";
 
-const user = JSON.parse(
-    localStorage.getItem("user")
-);
+import { initLayout } from "./components.js";
+
+await initLayout();
+
+const user = JSON.parse(localStorage.getItem("user"));
+
+const response = await getUserRole();
+
+    if (!response.success) {
+        localStorage.clear();
+        window.location.replace("/pages/login.html");
+    }
+
+user.role = response.data.role;
 
 if (user.role === "provider") {
 

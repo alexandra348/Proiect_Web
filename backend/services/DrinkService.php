@@ -41,6 +41,23 @@ class DrinkService {
         }
     }
 
+    public function searchDrink($term): array
+    {
+
+        try {
+            $drink = $this->repository->search($term);
+
+            if (!$drink) {
+                throw new DrinkException("No drink found");
+            }
+
+            return $drink;
+
+        } catch (PDOException $e) {
+            throw new DrinkException("Failed to fetch drinks", 0, $e);
+        }
+    }
+
     public function getByProvider($providerId): array
     {
         if (!is_numeric($providerId) || $providerId <= 0) {
@@ -54,7 +71,7 @@ class DrinkService {
         }
     }
 
-    public function create(array $data): bool
+    public function create(array $data)
 {
     $this->validateCreate($data);
 
@@ -156,7 +173,7 @@ class DrinkService {
         }
 
         if(isset($data['provider_id'])) {
-            if ($exists[0]["provider_id"] != $data['provider_id']) {
+            if ($exists["provider_id"] != $data['provider_id']) {
                  throw new DrinkException("You cannot update this drink");
             }
         }

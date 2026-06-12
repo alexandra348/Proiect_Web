@@ -87,19 +87,38 @@ class DrinkRepository
 
     public function getByProvider($provider_id)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM drinks WHERE provider_id=:id");
+        $stmt = $this->conn->prepare("SELECT d.*, c.name category FROM drinks d JOIN categories c
+        ON d.category_id = c.id WHERE provider_id=:id");
         $stmt->execute([":id" => $provider_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function create($data)
     {
-        $query = "INSERT INTO drinks (name, price, provider_id, category_id, image_url)
-                  VALUES (:name, :price, :provider_id, :category_id, :image_url)";
+        $query = "
+            INSERT INTO drinks
+            (
+                name,
+                price,
+                provider_id,
+                category_id,
+                image_url
+            )
+            VALUES
+            (
+                :name,
+                :price,
+                :provider_id,
+                :category_id,
+                :image_url
+            )
+            RETURNING id
+        ";
 
         $stmt = $this->conn->prepare($query);
+        $stmt->execute($data);
 
-        return $stmt->execute($data);
+        return $stmt->fetchColumn();
     }
 
     public function update(int $id, array $data): bool
@@ -141,5 +160,45 @@ class DrinkRepository
     {
         $stmt = $this->conn->prepare("DELETE FROM drinks WHERE id=:id");
         return $stmt->execute([":id" => $id]);
+    }
+
+    public function search(string $term): array
+    {
+        $query = "
+            SELECT DISTINCT d.*,
+                c.name AS category,
+                p.name AS provider,
+                p.city
+            FROM drinks d
+
+            JOIN categories c
+                ON d.category_id = c.id
+
+            JOIN providers p
+                ON d.provider_id = p.id
+
+            LEFT JOIN drink_ingredients di
+                ON d.id = di.drink_id
+
+            LEFT JOIN ingredients i
+                ON di.ingredient_id = i.id
+
+            WHERE
+                LOWER(d.name) LIKE LOWER(:term)
+                OR LOWER(p.name) LIKE LOWER(:term)
+                OR LOWER(p.city) LIKE LOWER(:term)
+                OR LOWER(c.name) LIKE LOWER(:term)
+                OR LOWER(i.name) LIKE LOWER(:term)
+
+            ORDER BY d.name
+        ";
+
+        $stmt = $this->conn->prepare($query);
+
+        $stmt->execute([
+            ":term" => "%{$term}%"
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

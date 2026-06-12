@@ -44,6 +44,12 @@ color:var(--text);
 min-height:100vh;
 }
 
+html, body{
+    height:auto;
+    overflow-y:auto;
+    margin:0;
+}
+
 h1{
 font-size:32px;
 font-family:'Poppins';
@@ -83,4 +89,18 @@ color:var(--text2);
 .footer-links{
 display:flex;
 gap:16px;
+}
+
+.empty-state{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:70vh;
+    font-size:36px;
+    font-weight:600;
+    color:var(--text2);
+    text-align:center;
+    width:100%;
+    white-space: nowrap;
+    margin-left: 150%;
 }
