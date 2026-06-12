@@ -7,16 +7,38 @@ import {
     addIngredientToDrink,
     updateDrink,
     getDrinkIngredients,
-    deleteIngredientFromDrink
+    deleteIngredientFromDrink,
+    getProviders,
+    getUserRole
 }
     from "./api.js";
 
 import { initLayout } from "./components.js";
 await initLayout();
 
+const response = await getUserRole();
+
+if (!response.success) {
+
+        localStorage.clear();
+        window.location.replace("/pages/login.html");
+    }
+
+const user = { role: response.data.role};
+
+const params = new URLSearchParams(window.location.search);
+const providerId = params.get("id");
+
+if (user?.role === "admin" && !providerId) {
+
+    window.location.replace(
+        "/pages/admin_dashboard.html?tab=drinks"
+    );
+}
+
 export async function initProviderDashboard() {
 
-    const response = await getProviderDrinks();
+    const response = await getProviderDrinks(providerId);
 
     if (!response.success) return;
 
@@ -31,6 +53,12 @@ export async function initProviderDashboard() {
                 .classList.add("hidden");
         }
     );
+
+    if (user.role === "admin" && response.data.length) {
+
+        const provider = await getProviders(providerId);
+        document.querySelector("#dashboard-title").textContent =`${provider.data.name} Drinks`;
+    }
 
     renderStats(response.data);
     renderDrinks(response.data);
@@ -113,6 +141,9 @@ async function saveDrink(e) {
     formData.append("name", name);
     formData.append("price", price);
     formData.append("category_id", categoryId);
+    if (user.role === "admin" && providerId) {
+        formData.append("provider_id", providerId);
+    }
 
     if (image) {
         formData.append("image", image);

@@ -2,7 +2,7 @@ import { initLayout } from "./components.js";
 
 import { renderUsers } from "./admin_users.js";
 import { renderProviders } from "./admin_providers.js";
-//import { renderDrinks } from "./admin_drinks.js";
+import { renderDrinks } from "./admin_drinks.js";
 import { renderCategories } from "./admin_categories.js";
 import { renderIngredients } from "./admin_ingredients.js";
 
@@ -47,9 +47,9 @@ async function loadTab(tab) {
             await renderProviders();
             break;
 
-        /*case "drinks":
+        case "drinks":
             await renderDrinks();
-            break;*/
+            break;
 
         case "categories":
             await renderCategories();

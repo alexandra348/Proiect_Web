@@ -60,8 +60,8 @@ export async function getDrinks(id = null) {
     return request(id ? `/drinks?id=${id}` : "/drinks");
 }
 
-export async function getProviderDrinks() {
-    return request("/drinks/provider");
+export async function getProviderDrinks(id = null) {
+    return request(id ? `/drinks/provider?id=${id}` : "/drinks/provider");
 }
 
 export async function updateDrink(drinkId, formData) {
@@ -190,6 +190,10 @@ export async function deleteProvider(id = null) {
 // ========================
 export async function getUsers(id = null) {
     return request(id ? `/users?id=${id}` : "/users");
+}
+
+export async function getUserRole() {
+    return request("/auth/me");
 }
 
 export async function registerUser(data) {

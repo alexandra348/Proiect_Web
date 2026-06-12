@@ -302,6 +302,14 @@ if($uri=="/api/users" && $method=="GET"){
         : sendResponse($userController->getAll());
 }
 
+if($uri=="/api/auth/me" && $method=="GET") {
+    $user = Authorization::requireRoles(['admin', 'user', 'provider']);
+    if($user)
+        sendResponse(["success"=>true, "role"=>$user->role]);
+    else
+        sendResponse(["success"=>false, "You are not authenticated"]);
+}
+
 if($uri=="/api/users" && $method=="POST"){
     sendResponse($userController->register($data, null));
 }
