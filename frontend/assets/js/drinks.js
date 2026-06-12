@@ -435,8 +435,11 @@ function renderByProvider() {
 function setActiveButton(mode) {
 
     const categoriesBtn = document.querySelector("#btn-categories");
-
     const providersBtn = document.querySelector("#btn-providers");
+
+    if (!categoriesBtn || !providersBtn) {
+        return;
+    }
 
     if (mode === "category") {
         categoriesBtn.classList.add("active");
@@ -447,3 +450,4 @@ function setActiveButton(mode) {
         categoriesBtn.classList.remove("active");
     }
 }
+
