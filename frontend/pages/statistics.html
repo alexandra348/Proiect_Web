@@ -6,6 +6,7 @@
     <title>Statistics</title>
 
     <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/statistics.css">
     <link rel="stylesheet" href="/assets/css/dashboard.css">
     <link rel="stylesheet" href="/assets/css/buttons.css">
     <link rel="stylesheet" href="/assets/css/cards.css">
@@ -24,25 +25,80 @@
 <div class="content">
 
 <h1>Statistics</h1>
+<p>Overview of drinks, categories, providers and user preferences</p>
 
-<div id="statistics-container">
+<div id="statistics-container" class="stats-cards">
 
     <div class="card">
-        <h3>Total Drinks</h3>
-        <p id="total-drinks">0</p>
+        <h3>🥤Top Drinks</h3>
+        <p id="top-drinks-count">0</p>
     </div>
 
     <div class="card">
-        <h3>Total Users</h3>
-        <p id="total-users">0</p>
+        <h3>☕Top Category</h3>
+        <p id="top-category">-</p>
     </div>
 
     <div class="card">
-        <h3>Total Providers</h3>
-        <p id="total-providers">0</p>
+        <h3>🏪Top Provider</h3>
+        <p id="top-provider">-</p>
     </div>
 
 </div>
+
+<section class="stats-section">
+    <h2>Top Categories</h2>
+    <div id="categories-chart" class="chart-box"></div>
+</section>
+
+<section class="stats-section">
+    <h2>Top Providers</h2>
+    <div id="providers-chart" class="chart-box"></div>
+</section>
+
+<section class="stats-section">
+    <h2>Top Restrictions</h2>
+    <div id="restrictions-chart" class="chart-box"></div>
+</section>
+
+<section>
+    <h2>Top Drinks</h2>
+    <table class="stats-table">
+        <thead>
+            <tr>
+                <th>Drink</th>
+                <th>Popularity</th>
+            </tr>
+        </thead>
+        <tbody id="top-drinks-table"></tbody>
+    </table>
+</section>
+
+<section>
+    <h2>Top Ingredients</h2>
+    <table class="stats-table">
+        <thead>
+            <tr>
+                <th>Ingredient</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody id="top-ingredients-table"></tbody>
+    </table>
+</section>
+
+<section>
+    <h2>Avoided Ingredients</h2>
+    <table class="stats-table">
+        <thead>
+            <tr>
+                <th>Ingredient</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody id="avoided-ingredients-table"></tbody>
+    </table>
+</section>
 
 <div id="footer"></div>
 
