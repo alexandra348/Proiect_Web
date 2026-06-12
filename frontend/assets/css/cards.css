@@ -56,7 +56,6 @@ color:var(--mint);
 .drink-category{
 margin-top:6px;
 color:var(--text2);
-
 }
 
 .drink-provider{
@@ -70,106 +69,106 @@ width: 260px;
 }
 
 .drink-details{
-    max-width:1200px;
-    margin:0 auto;
+max-width:1200px;
+margin:0 auto;
 }
 
 .drink-hero{
-    display:flex;
-    gap:32px;
-    align-items:center;
-    margin-bottom:16px;
-    background:white;
-    border-radius:20px;
-    padding:24px;
-    box-shadow:var(--shadow);
+display:flex;
+gap:32px;
+align-items:center;
+margin-bottom:16px;
+background:white;
+border-radius:20px;
+padding:24px;
+box-shadow:var(--shadow);
 }
 
 .drink-image2{
-    width:300px;
-    height:300px;
-    object-fit:cover;
-    border-radius:12px;
-    flex-shrink:0;
+width:300px;
+height:300px;
+object-fit:cover;
+border-radius:12px;
+flex-shrink:0;
 }
 
 .drink-header{
-    flex:1;
+flex:1;
 
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    gap:12px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+gap:12px;
 }
 
 .drink-header h1{
-    margin:0;
-    font-size:36px;
+margin:0;
+font-size:36px;
 }
 
 .drink-meta{
-    display:flex;
-    gap:10px;
-    color:var(--text2);
+display:flex;
+gap:10px;
+color:var(--text2);
 }
 
 .drink-actions{
-    display:flex;
-    gap:12px;
-    margin-top:8px;
+display:flex;
+gap:12px;
+margin-top:8px;
 }
 
 .details-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:24px;
-    margin-bottom:24px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:24px;
+margin-bottom:24px;
 }
 
 .details-card{
-    background:white;
-    border-radius:16px;
-    padding:24px;
-    box-shadow:var(--shadow);
+background:white;
+border-radius:16px;
+padding:24px;
+box-shadow:var(--shadow);
 }
 
 .details-card h2{
-    margin-top:0;
-    margin-bottom:16px;
+margin-top:0;
+margin-bottom:16px;
 }
 
 .ingredient-tag{
-    display:inline-block;
-    padding:8px 14px;
-    border-radius:999px;
-    background:var(--hover);
-    margin:4px;
-    font-weight:500;
+display:inline-block;
+padding:8px 14px;
+border-radius:999px;
+background:var(--hover);
+margin:4px;
+font-weight:500;
 }
 
 .review-card{
-    padding:16px;
-    border:1px solid #eee;
-    border-radius:12px;
-    margin-bottom:12px;
+padding:16px;
+border:1px solid #eee;
+border-radius:12px;
+margin-bottom:12px;
 }
 
 .review-header{
-    display:flex;
-    justify-content:space-between;
-    margin-bottom:8px;
+display:flex;
+justify-content:space-between;
+margin-bottom:8px;
 }
 
 .review-user{
-    font-weight:600;
+font-weight:600;
 }
 
 .review-rating{
-    color:#f59e0b;
+color:#f59e0b;
 }
 
 .provider-row{
-    margin-bottom:10px;
-    color:var(--text);
+margin-bottom:10px;
+color:var(--text);
 }
 

@@ -560,6 +560,22 @@ if($uri=="/api/preferences/providers" && $method=="DELETE"){
 
 /* STATISTICS */
 
+if($uri=="/api/statistics/rss" && $method=="GET") {
+
+    $response = $statisticsController->topDrinksRss();
+    http_response_code($response["status"]);
+
+    if ($response["status"] !== 200) {
+        header("Content-Type: application/json");
+        echo json_encode($response);
+        exit;
+    }
+
+    header("Content-Type: application/rss+xml; charset=UTF-8");
+    echo $response["data"];
+    exit;
+}
+
 if($uri=="/api/statistics" && $method=="GET") {
 
         Authorization::requireRoles(['admin','provider','user']);

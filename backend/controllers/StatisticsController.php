@@ -2,14 +2,17 @@
 
 require_once __DIR__ . '/../services/StatisticsService.php';
 require_once __DIR__ . '/../exceptions/StatisticsException.php';
+require_once __DIR__ . '/../export_services/RSSService.php';
 
 class StatisticsController
 {
     private StatisticsService $service;
+    private RssService $rssService;
 
     public function __construct(StatisticsService $service)
     {
         $this->service = $service;
+        $this->rssService = new RssService();
     }
 
     public function dashboard()
@@ -147,4 +150,33 @@ class StatisticsController
             ];
         }
     }
+
+    public function topDrinksRss()
+  {
+    try {
+        $drinks = $this->service->topDrinks();
+
+        $protocol =
+            (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+                ? 'https'
+                : 'http';
+
+        $baseUrl =
+            $protocol . '://' . $_SERVER['HTTP_HOST'];
+
+        return [
+            "status" => 200,
+            "data" => $this->rssService->generateTopDrinks(
+                $drinks,
+                $baseUrl
+            )
+        ];
+
+    } catch (StatisticsException $e) {
+        return [
+            "status" => 500,
+            "error" => "Failed to generate RSS feed"
+        ];
+    }
+   }
 }
